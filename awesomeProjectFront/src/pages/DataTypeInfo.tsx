@@ -1,53 +1,53 @@
 import { FC, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { BigDataTypeCard, InterfaceDataTypeProps } from '../components/DataTypeCard';
+import { useLocation, useParams } from 'react-router-dom';
+import { useDispatch } from "react-redux";
 import Navbar from 'react-bootstrap/Navbar';
-import { Link } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
+import { AppDispatch } from "../store";
+import { addToHistory } from "../store/historySlice"
+import { InterfaceDataTypeProps } from '../models';
+import { BigDataTypeCard } from '../components/DataTypeCard';
 import LoadAnimation from '../components/LoadAnimation';
-import { getDataType } from '../requests/GetDataType'
+import Breadcrumbs from '../components/Breadcrumbs';
+import { getDataType } from '../api';
 
 const DataTypeInfo: FC = () => {
     let { data_type_id } = useParams()
-    const [dataType, setDataType] = useState<InterfaceDataTypeProps>()
+    const [dataType, setDataType] = useState<InterfaceDataTypeProps | undefined>(undefined)
     const [loaded, setLoaded] = useState<boolean>(false)
+    const dispatch = useDispatch<AppDispatch>();
+    const location = useLocation().pathname;
+
+    console.log()
 
     useEffect(() => {
         getDataType(data_type_id)
             .then(data => {
-                setDataType(data)
-                setLoaded(true)
+                setDataType(data);
+                dispatch(addToHistory({ path: location, name: data ? data.data_type_name : "ошибка" }));
+                setLoaded(true);
             })
             .catch((error) => {
                 console.error("Error fetching data:", error);
             });
-    }, []);
+    }, [dispatch]);
 
     return (
-        <>
-            <Navbar>
-                <Nav>
-                    <Link to="/data_types" className="nav-link p-0 text-dark" data-bs-theme="dark">
-                        Виды данных
-                    </Link>
-                    <Nav.Item className='mx-1'>{">"}</Nav.Item>
-                    <Nav.Item className="nav-link p-0 text-dark">
-                        {`${dataType ? dataType.data_type_name : '/???/'}`}
-                    </Nav.Item>
-                </Nav>
-            </Navbar>
-            {loaded ? (
-                dataType ? (
-                    <BigDataTypeCard {...dataType} />
+        <LoadAnimation loaded={loaded}>
+            {dataType ? (
+                    <>
+                        <Navbar>
+                            <Nav>
+                                <Breadcrumbs />
+                            </Nav>
+                        </Navbar>
+                        <BigDataTypeCard {...dataType} />
+                    </>
                 ) : (
                     <h3 className='text-center'>Такого вида данных не существует</h3>
-                )
-            ) : (
-                <LoadAnimation />
-            )
-            }
-        </ >
+                )}
+        </LoadAnimation>
     )
 }
 
-export { DataTypeInfo }
+export default DataTypeInfo;

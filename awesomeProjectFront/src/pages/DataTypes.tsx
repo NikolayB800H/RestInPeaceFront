@@ -1,82 +1,115 @@
-import { useEffect, useState, FC } from 'react';
-import { SmallDataTypeCard, InterfaceDataTypeProps } from '../components/DataTypeCard';
-import LoadAnimation from '../components/LoadAnimation';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, Link } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { getDataTypes } from '../requests/GetDataTypes'
+import { SmallDataTypeCard } from '../components/DataTypeCard';
+import { InterfaceDataTypeProps } from "../models";
+import { AppDispatch, RootState } from "../store";
+import { clearHistory, addToHistory } from "../store/historySlice";
+import { getDataTypes, axiosAPI } from '../api';
+import LoadAnimation from '../components/LoadAnimation';
+import { setDataTypeName as setter } from "../store/searchSlice";
 
-interface InterfaceSearchProps {
-    setDataTypes: React.Dispatch<React.SetStateAction<InterfaceDataTypeProps[]>>
-}
-
-const Search: FC<InterfaceSearchProps> = ({ setDataTypes }) => {
-    const [searchText, setSearchText] = useState<string>('');
-
-    const handleSearch = (event: React.FormEvent<any>) => {
-        event.preventDefault();
-        getDataTypes(searchText)
-            .then(data => {
-                console.log(data)
-                setDataTypes(data.data_types)
-            })
-    }
-    return (
-        <Navbar>
-            <Form className="d-flex flex-row flex-grow-1 gap-2" onSubmit={handleSearch}>
-                <Form.Control
-                    type="text"
-                    placeholder="Поиск"
-                    className="form-control-sm flex-grow-1 shadow shadow-sm"
-                    data-bs-theme="dark"
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                />
-                <Button
-                    variant="dark"
-                    size="sm"
-                    type="submit"
-                    className="shadow">
-                    🔍
-                </Button>
-            </Form>
-        </Navbar>)
-}
+const data_types = '/data_types';
 
 const DataTypes = () => {
-    const [loaded, setLoaded] = useState<boolean>(false)
-    const [dataTypes, setDataTypes] = useState<InterfaceDataTypeProps[]>([]);
-    const [_, setDraftForecastApp] = useState<string | null>(null);
+    const searchText = useSelector((state: RootState) => state.search.data_type_name);
+    const [dataTypes, setDataTypes] = useState<InterfaceDataTypeProps[]>([])
+    const [draft, setDraft] = useState<string | null>(null)
+    const role = useSelector((state: RootState) => state.user.role);
+    const dispatch = useDispatch<AppDispatch>();
+    const location = useLocation().pathname;
 
-    useEffect(() => {
-        getDataTypes()
+    const useGetDataTypes = () =>
+        getDataTypes(searchText)
             .then(data => {
-                console.log(data)
-                setDraftForecastApp(data.draft_forecast_app)
                 setDataTypes(data.data_types)
-                setLoaded(true)
+                setDraft(data.draft_forecast_app)
             })
             .catch((error) => {
                 console.error("Error fetching data:", error);
             });
-    }, []);
+
+
+    const useHandleSearch = (event: React.FormEvent<any>) => {
+        event.preventDefault();
+        useGetDataTypes();
+    }
+
+    useEffect(() => {
+        dispatch(clearHistory())
+        dispatch(addToHistory({ path: location, name: "Виды данных" }))
+        useGetDataTypes();
+    }, [dispatch]);
+
+    const useAddToForecastApplication = (id: string) => () => {
+        let accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+            return
+        }
+
+        axiosAPI.post(`${data_types}/${id}/add_to_forecast_application`, null, { headers: { 'Authorization': `Bearer${accessToken}`, } })
+            .then(() => {
+                useGetDataTypes();
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    }
+
+    console.log(draft)
 
     return (
         <>
-            <Search setDataTypes={setDataTypes} />
+            <Navbar>
+                <Form className="d-flex flex-row flex-grow-1 gap-2" onSubmit={useHandleSearch}>
+                    <Form.Control
+                        type="text"
+                        placeholder="Поиск"
+                        className="form-control-sm flex-grow-1 shadow"
+                        data-bs-theme="dark"
+                        value={searchText}
+                        onChange={(e) => dispatch(setter(e.target.value))}
+                    />
+                    <Button
+                        variant="dark"
+                        size="sm"
+                        type="submit"
+                        className="shadow-lg">
+                        🔎
+                    </Button>
+                </Form>
+            </Navbar>
             <div className='row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 px-1'>
-                {loaded ? (
-                    dataTypes.map((dataType) => (
+                <LoadAnimation loaded={dataTypes.length > 0}>
+                    {dataTypes.map((dataType) => (
                         <div className='d-flex p-2 justify-content-center' key={dataType.data_type_id}>
-                            <SmallDataTypeCard  {...dataType} />
+                            <SmallDataTypeCard {...dataType}>
+                                {role != 0 &&
+                                    <Button
+                                        variant='outline-primary'
+                                        className='mt-0 rounded-bottom'
+                                        onClick={useAddToForecastApplication(dataType.data_type_id)}>
+                                        Добавить в корзину
+                                    </Button>
+                                }
+                            </SmallDataTypeCard>
                         </div>
-                    ))
-                ) : (
-                    <LoadAnimation />
-                )}
+                    ))}
+                </LoadAnimation>
             </div>
+            {!!role && <Link to={`/transportations/${draft}`}>
+                <Button
+                    style={{ position: 'fixed', bottom: '16px', right: '16px', zIndex: '1000' }}
+                    className="btn btn-dark rounded-pill"
+                    disabled={!draft}>
+                    Корзина
+                </Button>
+            </Link>}
         </>
     )
 }
 
-export { DataTypes }
+export default DataTypes;
