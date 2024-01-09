@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 
 import { axiosAPI } from ".";
-import { InterfaceDataTypeProps, InterfaceForecastAppsProps } from "../models";
+import { InterfaceDataTypeExtendedProps, InterfaceForecastAppsProps } from "../models";
 
 const forecast_applications = '/forecast_applications';
 
@@ -18,8 +18,9 @@ function formatDate(date: Date | null): string {
     const day = date.getDate().toString().padStart(2, '0');
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
 
-    return `${hours}:${minutes} ${day}.${month}.${year}`;
+    return `${hours}:${minutes}:${seconds} ${day}.${month}.${year}`;
 }
 
 export async function getForecastApplications(
@@ -36,10 +37,10 @@ export async function getForecastApplications(
             params: {
                 ...(status && { application_status: status }),
                 ...(startDate && {
-                    formation_date_start: format(new Date(startDate), 'yyyy-MM-dd HH:mm'),
+                    formation_date_start: format(new Date(startDate), 'yyyy-MM-dd HH:mm:ss'),
                 }),
                 ...(endDate && {
-                    formation_date_end: format(new Date(endDate), 'yyyy-MM-dd HH:mm'),
+                    formation_date_end: format(new Date(endDate), 'yyyy-MM-dd HH:mm:ss'),
                 }),
             },
             headers: {
@@ -62,7 +63,7 @@ export async function getForecastApplications(
 }
 
 interface ForecastApplicationResponse {
-    data_types: InterfaceDataTypeProps[]
+    data_types: InterfaceDataTypeExtendedProps[]
     application: InterfaceForecastAppsProps
 }
 
@@ -75,7 +76,7 @@ export async function getForecastApplication(id: string | undefined): Promise<Fo
 
     return axiosAPI.get<ForecastApplicationResponse>(`${forecast_applications}/${id}`, {
         headers: {
-            'Authorization': `Bearer ${accessToken}`,
+            'Authorization': `Bearer${accessToken}`,
             'Content-Type': 'application/json',
         }
     })

@@ -19,3 +19,22 @@ export interface InterfaceForecastAppsProps {
     moderator_id: string | null
     input_start_date: string | null
 }
+
+export interface InterfaceShortDraft {
+    application_id: string
+    data_type_count: number
+}
+
+export interface InterfaceDataTypeExtendedProps {
+    data_type_id: string
+    image_path: string
+    data_type_name: string
+    precision: number
+    description: string
+    unit: string
+    data_type_status: string
+    input_first: number | null
+    input_second: number | null
+    input_third: number | null
+    output: number | null
+}

@@ -1,6 +1,6 @@
 import { InterfaceDataTypeProps } from '../models';
 
-export const draft_forecast_app = null;
+export const draft_application = null;
 export let data_types = new Map<string, InterfaceDataTypeProps>(
     [
 		["a20163ce-7be5-46ec-a50f-a313476b2bd1",{

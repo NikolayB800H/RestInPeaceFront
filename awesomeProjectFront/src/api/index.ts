@@ -1,5 +1,5 @@
-import { data_types, draft_forecast_app } from './MockData';
-import { InterfaceDataTypeProps } from '../models';
+import { data_types, draft_application } from './MockData';
+import { InterfaceDataTypeProps, InterfaceShortDraft } from '../models';
 import axios, { AxiosRequestConfig } from 'axios';
 
 const ip = 'localhost';
@@ -11,7 +11,7 @@ export const axiosAPI = axios.create({ baseURL: `http://${ip}:${port}/api/`, tim
 //export const axiosImage = axios.create({ baseURL: `http://${ip}:${port}/images/`, timeout: 10000 });
 
 export type Response = {
-    draft_forecast_app: string | null;
+    draft_application: InterfaceShortDraft | null;
     data_types: InterfaceDataTypeProps[];
 }
 
@@ -23,7 +23,7 @@ function fromMock(filter?: string): Response {
             (data_type) => data_type.data_type_name.toLowerCase().includes(type)
         )
     }
-    return { draft_forecast_app, data_types: filteredDataTypes }
+    return { draft_application: draft_application, data_types: filteredDataTypes }
 }
 
 export async function getDataType(dataTypeId?: string): Promise<InterfaceDataTypeProps | undefined> {

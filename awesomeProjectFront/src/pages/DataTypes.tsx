@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { SmallDataTypeCard } from '../components/DataTypeCard';
-import { InterfaceDataTypeProps } from "../models";
+import { InterfaceDataTypeProps, InterfaceShortDraft } from "../models";
 import { AppDispatch, RootState } from "../store";
 import { clearHistory, addToHistory } from "../store/historySlice";
 import { getDataTypes, axiosAPI } from '../api';
@@ -17,7 +17,7 @@ const data_types = '/data_types';
 const DataTypes = () => {
     const searchText = useSelector((state: RootState) => state.search.data_type_name);
     const [dataTypes, setDataTypes] = useState<InterfaceDataTypeProps[]>([])
-    const [draft, setDraft] = useState<string | null>(null)
+    const [draft, setDraft] = useState<InterfaceShortDraft | null>(null)
     const role = useSelector((state: RootState) => state.user.role);
     const dispatch = useDispatch<AppDispatch>();
     const location = useLocation().pathname;
@@ -26,7 +26,8 @@ const DataTypes = () => {
         getDataTypes(searchText)
             .then(data => {
                 setDataTypes(data.data_types)
-                setDraft(data.draft_forecast_app)
+                setDraft(data.draft_application)
+                console.log(draft)
             })
             .catch((error) => {
                 console.error("Error fetching data:", error);
@@ -89,7 +90,7 @@ const DataTypes = () => {
                             <SmallDataTypeCard {...dataType}>
                                 {role != 0 &&
                                     <Button
-                                        variant='outline-primary'
+                                        variant='outline-secondary'
                                         className='mt-0 rounded-bottom'
                                         onClick={useAddToForecastApplication(dataType.data_type_id)}>
                                         Добавить в корзину
@@ -100,7 +101,7 @@ const DataTypes = () => {
                     ))}
                 </LoadAnimation>
             </div>
-            {!!role && <Link to={`/transportations/${draft}`}>
+            {(!!role && draft) && <Link to={`/forecast_applications/${draft!.application_id}`}>
                 <Button
                     style={{ position: 'fixed', bottom: '16px', right: '16px', zIndex: '1000' }}
                     className="btn btn-dark rounded-pill"

@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Link } from 'react-router-dom';
@@ -68,12 +69,10 @@ const ForecastApps = () => {
                         </Form.Select>
                     </InputGroup>
                     <DateTimePicker
-                        selected={endDate ? new Date(endDate) : null}
-                        onChange={(date: Date) => dispatch(setDateStart(date ? date.toISOString() : null))}
-                    />
-                    <DateTimePicker
-                        selected={startDate ? new Date(startDate) : null}
-                        onChange={(date: Date) => dispatch(setDateEnd(date ? date.toISOString() : null))}
+                        startDate={startDate ? new Date(startDate) : null}
+                        setStartDate={(date: Date) => dispatch(setDateStart(date ? format(date, 'yyyy-MM-dd HH:mm:ss') : null))}
+                        endDate={endDate ? new Date(endDate) : null}
+                        setEndDate={(date: Date) => dispatch(setDateEnd(date ? format(date, 'yyyy-MM-dd HH:mm:ss') : null))}
                     />
                     <Button
                         variant="dark"
