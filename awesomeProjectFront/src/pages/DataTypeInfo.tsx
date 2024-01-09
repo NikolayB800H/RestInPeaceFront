@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
 import { AppDispatch } from "../store";
 import { addToHistory } from "../store/historySlice"
 import { InterfaceDataTypeProps } from '../models';
@@ -37,9 +36,7 @@ const DataTypeInfo: FC = () => {
             {dataType ? (
                     <>
                         <Navbar>
-                            <Nav>
-                                <Breadcrumbs />
-                            </Nav>
+                            <Breadcrumbs />
                         </Navbar>
                         <BigDataTypeCard {...dataType} />
                     </>

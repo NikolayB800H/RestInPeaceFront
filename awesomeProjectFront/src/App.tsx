@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
-import { DataTypes, DataTypeInfo, ForecastApps, ForecastAppInfo, Authorization, Registration } from './pages'
+import { DataTypes, DataTypeInfo, ForecastApps, ForecastAppInfo, Authorization, Registration, DataTypesTable, DataTypeEdit } from './pages'
 import NavigationBar from './components/NavBar';
 import { AppDispatch } from "./store";
 import { setLogin, setRole } from "./store/userSlice";
@@ -27,6 +27,8 @@ function App() {
           <Route path="/" element={<Navigate to="/data_types" />} />
           <Route path="/data_types" element={<DataTypes />} />
           <Route path="/data_types/:data_type_id" element={<DataTypeInfo />} />
+          <Route path="/data_types-edit" element={<AuthCheck allowedRoles={[MODERATOR]}><DataTypesTable /></AuthCheck>} />
+          <Route path="/data_types-edit/:data_type_id" element={<AuthCheck allowedRoles={[MODERATOR]}><DataTypeEdit /></AuthCheck>} />
 
           <Route path="/forecast_applications" element={<AuthCheck allowedRoles={[CLIENT, MODERATOR]}><ForecastApps /></AuthCheck>} />
           <Route path="/forecast_applications/:application_id" element={<AuthCheck allowedRoles={[CLIENT, MODERATOR]}><ForecastAppInfo /></AuthCheck>} />

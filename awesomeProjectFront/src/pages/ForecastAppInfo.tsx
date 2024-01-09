@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import { Card, Row, Col, Navbar, InputGroup, Form, Button, ButtonGroup, Stack } from 'react-bootstrap';
 import { axiosAPI } from "../api";
 import { getForecastApplication } from '../api/ForecastApps';
 import { InterfaceForecastAppsProps, InterfaceDataTypeExtendedProps } from "../models";
-import { AppDispatch } from "../store";
+import { AppDispatch, RootState } from "../store";
 import { addToHistory } from "../store/historySlice";
 import LoadAnimation from '../components/LoadAnimation';
 import { SmallDataTypeCard } from '../components/DataTypeCard';
 import Breadcrumbs from '../components/Breadcrumbs';
 import OneDatePicker from '../components/OneDatePicker';
 import InputFormMy from '../components/InputFormMy';
+import { MODERATOR } from '../components/AuthCheck';
 
 const ForecastAppInfo = () => {
     let { application_id } = useParams()
@@ -23,6 +24,7 @@ const ForecastAppInfo = () => {
     const [edit, setEdit] = useState(false);
     const [inputStartDate, setInputStartDate] = useState<Date | null>(null);
     const navigate = useNavigate();
+    const role = useSelector((state: RootState) => state.user.role);
 
     const useGetData = () => {
         setLoaded(false)
@@ -37,11 +39,11 @@ const ForecastAppInfo = () => {
                     setComposition(data.data_types);
                 }
                 setLoaded(true)
-            })
+            })/*
             .catch((error) => {
                 console.error("Error fetching data:", error);
                 setLoaded(true)
-            });
+            })*/;
     }
 
     const useUpdate = () => {
@@ -57,16 +59,17 @@ const ForecastAppInfo = () => {
                     'Content-Type': 'application/json',
                 }
             })
-            .then(() => useGetData())
+            .then(() => useGetData())/*
             .catch((error) => {
                 console.error("Error fetching data:", error);
-            });
+            })*/;
         setEdit(false);
     }
 
     useEffect(() => {
-        useGetData()
         dispatch(addToHistory({ path: location, name: "Заявка на прогноз" }))
+        useGetData()
+        setLoaded(true)
     }, [dispatch]);
 
     const useDelFromTransportation = (id: string) => () => {
@@ -91,10 +94,10 @@ const ForecastAppInfo = () => {
         axiosAPI.put('/forecast_applications/user_confirm', null, { headers: { 'Authorization': `Bearer${accessToken}`, } })
             .then(_ => {
                 useGetData()
-            })
+            })/*
             .catch((error) => {
                 console.error("Error fetching data:", error);
-            });
+            })*/;
     }
 
     const deleteT = () => {
@@ -105,20 +108,26 @@ const ForecastAppInfo = () => {
         axiosAPI.delete('/forecast_applications', { headers: { 'Authorization': `Bearer${accessToken}`, } })
             .then(_ => {
                 navigate('/data_types')
-            })
+            })/*
             .catch((error) => {
                 console.error("Error fetching data:", error);
-            });
+            })*/;
     }
 
-    console.log(application)
+    const moderator_confirm = (status: string) => () => {
+        const accessToken = localStorage.getItem('access_token');
+        axiosAPI.put(`/forecast_applications/${application?.application_id}/moderator_confirm`,
+            { status: status },
+            { headers: { 'Authorization': `Bearer${accessToken}`, } })
+            .then(() => useGetData())
+    }
 
     return (
         <LoadAnimation loaded={loaded}>
             {application ? (
                 <>
                     <Navbar>
-                            <Breadcrumbs />
+                        <Breadcrumbs />
                     </Navbar>
                     <Col className='p-3 pt-1'>
                         <Card className='shadow text center text-md-start'>
@@ -136,9 +145,10 @@ const ForecastAppInfo = () => {
                                     <Form.Control readOnly value={application.application_formation_date ? application.application_formation_date : ''} />
                                 </InputGroup>
                                 {(application.application_status == 'отклонён' || application.application_status == 'завершён') && <InputGroup className='mb-1'>
-                                    <InputGroup.Text className='w-25 t-input-group-text'>{application.application_status === 'отклонён' ? 'Отклонена' : 'Подтверждена'}</InputGroup.Text>
+                                    <InputGroup.Text className='w-25 t-input-group-text'>{application.application_status === 'отклонён' ? 'отклонён' : 'завершён'}</InputGroup.Text>
                                     <Form.Control readOnly value={application.application_completion_date ? application.application_completion_date : ''} />
-                                </InputGroup>}
+                                </InputGroup>
+                                }
                                 <InputGroup className='mb-1'>
                                     <InputGroup.Text className='w-25 t-input-group-text'>Дата начала измерений</InputGroup.Text>
                                     <OneDatePicker
@@ -161,12 +171,20 @@ const ForecastAppInfo = () => {
                                     <InputGroup className='mb-1'>
                                         <InputGroup.Text className='w-25 t-input-group-text'>Статус рассчёта</InputGroup.Text>
                                         <Form.Control readOnly value={application.calculate_status ? application.calculate_status : ''} />
-                                    </InputGroup>}
+                                    </InputGroup>
+                                }
                                 {application.application_status == 'черновик' &&
                                     <ButtonGroup className='flex-grow-1 w-100'>
                                         <Button className='w-50' variant='success' onClick={confirm}>Сформировать и начать рассчёт</Button>
                                         <Button className='w-50' variant='danger' onClick={deleteT}>Удалить</Button>
-                                    </ButtonGroup>}
+                                    </ButtonGroup>
+                                }
+                                {application.application_status == 'сформирован' && role == MODERATOR &&
+                                    <ButtonGroup className='flex-grow-1 w-100'>
+                                        <Button variant='success' onClick={moderator_confirm("завершён")}>Одобрить завершение</Button>
+                                        <Button variant='danger' onClick={moderator_confirm("отклонён")}>Отклонить</Button>
+                                    </ButtonGroup>
+                                }
                             </Card.Body>
                         </Card>
                         {composition && <Row className='row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 px-1 mt-2'>

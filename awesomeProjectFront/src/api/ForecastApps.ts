@@ -24,6 +24,7 @@ function formatDate(date: Date | null): string {
 }
 
 export async function getForecastApplications(
+    user: string,
     status: string,
     startDate: string | null,
     endDate: string | null
@@ -49,7 +50,9 @@ export async function getForecastApplications(
             },
         })
         .then((response) =>
-            response.data.applications.map((tr: InterfaceForecastAppsProps) => ({
+            response.data.applications
+                .filter((tr: InterfaceForecastAppsProps) => tr.creator.toLowerCase().includes(user.toLowerCase()))
+                .map((tr: InterfaceForecastAppsProps) => ({
                 ...tr,
                 application_creation_date: formatDate(new Date(tr.application_creation_date)),
                 application_formation_date: tr.application_formation_date

@@ -16,6 +16,7 @@ export interface InterfaceForecastAppsProps {
     application_formation_date: string | null
     application_completion_date: string | null
     creator_id: string
+    creator: string
     moderator_id: string | null
     input_start_date: string | null
 }

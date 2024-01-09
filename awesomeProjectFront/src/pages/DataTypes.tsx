@@ -36,6 +36,7 @@ const DataTypes = () => {
 
     const useHandleSearch = (event: React.FormEvent<any>) => {
         event.preventDefault();
+        setDataTypes([]);
         useGetDataTypes();
     }
 
