@@ -3,8 +3,6 @@ import { forwardRef, ButtonHTMLAttributes, FC } from 'react';
 import DatePicker from 'react-datepicker';
 
 interface DatePickerProps {
-    /*selected: Date | null | undefined;
-    onChange: any;*/
     startDate:    Date | null | undefined;
     setStartDate: any;
     endDate:      Date | null | undefined;
@@ -67,20 +65,7 @@ const DateTimePicker: FC<DatePickerProps> = ({ startDate, setStartDate, endDate,
         />
     </>
         
-    );/*(
-        <DatePicker
-            selected={selected}
-            onChange={onChange}
-            showTimeSelect
-            timeFormat="HH:mm"
-            timeIntervals={60}
-            isClearable
-            timeCaption="Время"
-            dateFormat="HH:mm MM.d.yyyy"
-            customInput={<CustomInput />}
-            className="text-nowrap shadow-sm"
-        />
-    );*/
+    );
 };
 
 export default DateTimePicker;

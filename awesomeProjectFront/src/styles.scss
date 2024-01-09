@@ -55,3 +55,11 @@ $box-shadow-sm: 0 .250rem .5rem rgba($black, .25);
 .c-input-group-text {
     width: 120px;
 }
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}

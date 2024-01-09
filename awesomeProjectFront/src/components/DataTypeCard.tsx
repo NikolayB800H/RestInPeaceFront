@@ -16,7 +16,7 @@ export const SmallDataTypeCard: FC<InterfaceCardProps> = ({ children, data_type_
             {/* <Card.Img src={`http://${image_url}`} alt='картинка контейнера' onError={setPlaceholder} className='rounded object-fit-cover' /> */}
         </div>
         <Card.Body className='flex-grow-1'>
-            <Card.Title>Прогноз {data_type_name} (в {unit})</Card.Title>
+            <Card.Title as="h6">Прогноз {data_type_name} (в {unit})</Card.Title>
             <Card.Text>Погрешность ±{precision} {unit}</Card.Text>
         </Card.Body>
         <ButtonGroup vertical>

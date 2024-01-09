@@ -63,9 +63,9 @@ const ForecastApps = () => {
                             className="shadow-sm"
                         >
                             <option value="">любой</option>
-                            <option value="сформирована">сформирован</option>
-                            <option value="завершена">завершён</option>
-                            <option value="отклонена">отклонён</option>
+                            <option value="сформирован">сформирован</option>
+                            <option value="завершён">завершён</option>
+                            <option value="отклонён">отклонён</option>
                         </Form.Select>
                     </InputGroup>
                     <DateTimePicker

@@ -39,9 +39,9 @@ const InputFormMy: FC<InterfaceInputFormProps> = ({ input_first, input_second, i
             return
         }
         let bodyFormData = new FormData();
-        bodyFormData.append('input_first', inputFirst ? inputFirst.toFixed(1) : '');
-        bodyFormData.append('input_second', inputSecond ? inputSecond.toFixed(1) : '');
-        bodyFormData.append('input_third', inputThird ? inputThird.toFixed(1) : '');
+        bodyFormData.append('input_first', inputFirst ? String(inputFirst) : '');
+        bodyFormData.append('input_second', inputSecond ? String(inputSecond) : '');
+        bodyFormData.append('input_third', inputThird ? String(inputThird) : '');
         axiosAPI.put(`/forecast_applications/set_input/${id}`, bodyFormData, {
                 headers: {
                     Authorization: `Bearer${accessToken}`,
@@ -62,7 +62,7 @@ const InputFormMy: FC<InterfaceInputFormProps> = ({ input_first, input_second, i
                 <Form.Control
                     type='number'
                     readOnly={!editInputs}
-                    value={inputFirst ? inputFirst.toFixed(1) : ''}
+                    value={inputFirst ? String(inputFirst) : ''}
                     onChange={(e) => setInputFirst(parseFloat(e.target.value))}
                 />
             </InputGroup>
@@ -71,7 +71,7 @@ const InputFormMy: FC<InterfaceInputFormProps> = ({ input_first, input_second, i
                 <Form.Control
                     type='number'
                     readOnly={!editInputs}
-                    value={inputSecond ? inputSecond.toFixed(1) : ''}
+                    value={inputSecond ? String(inputSecond) : ''}
                     onChange={(e) => setInputSecond(parseFloat(e.target.value))}
                 />
             </InputGroup>
@@ -80,7 +80,7 @@ const InputFormMy: FC<InterfaceInputFormProps> = ({ input_first, input_second, i
                 <Form.Control
                     type='number'
                     readOnly={!editInputs}
-                    value={inputThird ? inputThird.toFixed(1) : ''}
+                    value={inputThird ? String(inputThird) : ''}
                     onChange={(e) => setInputThird(parseFloat(e.target.value))}
                 />
             </InputGroup>
