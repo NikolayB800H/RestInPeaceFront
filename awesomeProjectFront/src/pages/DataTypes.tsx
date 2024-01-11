@@ -107,7 +107,7 @@ const DataTypes = () => {
                     style={{ position: 'fixed', bottom: '16px', right: '16px', zIndex: '1000' }}
                     className="btn btn-dark rounded-pill"
                     disabled={!draft}>
-                    Корзина
+                    🧺
                 </Button>
             </Link>}
         </>

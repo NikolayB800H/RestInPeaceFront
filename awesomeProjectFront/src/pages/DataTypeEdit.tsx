@@ -176,7 +176,7 @@ const DataTypeEdit: FC = () => {
                                             className='w-50'
                                             variant='danger'
                                             onClick={useDeleteDataType}>
-                                                Удалит
+                                                Удалить
                                             </Button>
                                         </div>
                                     )}
