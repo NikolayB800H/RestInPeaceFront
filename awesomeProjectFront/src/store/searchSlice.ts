@@ -39,6 +39,7 @@ const searchSlice = createSlice({
         },
         reset: (state) => {
             state = initialState
+            console.log(state)
         }
     },
 });

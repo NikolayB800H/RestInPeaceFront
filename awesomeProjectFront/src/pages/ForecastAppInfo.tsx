@@ -11,6 +11,7 @@ import LoadAnimation from '../components/LoadAnimation';
 import { SmallDataTypeCard } from '../components/DataTypeCard';
 import Breadcrumbs from '../components/Breadcrumbs';
 import OneDatePicker from '../components/OneDatePicker';
+import { Delim } from '../components/Delim';
 import InputFormMy from '../components/InputFormMy';
 import { MODERATOR } from '../components/AuthCheck';
 
@@ -47,12 +48,16 @@ const ForecastAppInfo = () => {
     }
 
     const useUpdate = () => {
+        const toLocal = (date: Date | null) => {
+            if (date === null) return date;
+            return new Date(date.valueOf() - date.getTimezoneOffset() * 60 * 1000);
+        }
         let accessToken = localStorage.getItem('access_token');
         if (!accessToken) {
             return
         }
         axiosAPI.put(`/forecast_applications/update`,
-            { input_start_date: inputStartDate },
+            { input_start_date: toLocal(inputStartDate) },
             {
                 headers: {
                     'Authorization': `Bearer${accessToken}`,
@@ -130,18 +135,21 @@ const ForecastAppInfo = () => {
                         <Breadcrumbs />
                     </Navbar>
                     <Col className='p-3 pt-1'>
-                        <Card className='shadow text center text-md-start'>
+                        <Card className='shadow-sm text center text-md-start'>
                             <Card.Body>
-                                <InputGroup className='mb-1'>
+                                <InputGroup className='mb-3 shadow-sm rounded-2'>
                                     <InputGroup.Text className='w-25 t-input-group-text'>Статус заявки</InputGroup.Text>
+                                    <Delim />
                                     <Form.Control readOnly value={application.application_status} />
                                 </InputGroup>
-                                <InputGroup className='mb-1'>
+                                <InputGroup className='mb-3 shadow-sm rounded-2'>
                                     <InputGroup.Text className='w-25 t-input-group-text'>Создана</InputGroup.Text>
+                                    <Delim />
                                     <Form.Control readOnly value={application.application_creation_date} />
                                 </InputGroup>
-                                <InputGroup className='mb-1'>
+                                <InputGroup className='mb-3 shadow-sm rounded-2'>
                                     <InputGroup.Text className='w-25 t-input-group-text'>Сформирована</InputGroup.Text>
+                                    <Delim />
                                     <Form.Control readOnly value={application.application_formation_date ? application.application_formation_date : ''} />
                                 </InputGroup>
                                 {(application.application_status == 'отклонён' || application.application_status == 'завершён') && <InputGroup className='mb-1'>
@@ -149,24 +157,27 @@ const ForecastAppInfo = () => {
                                     <Form.Control readOnly value={application.application_completion_date ? application.application_completion_date : ''} />
                                 </InputGroup>
                                 }
-                                <InputGroup className='mb-1'>
-                                    <InputGroup.Text className='w-25 t-input-group-text'>Дата начала измерений</InputGroup.Text>
+                                <InputGroup className='mb-3 shadow-sm rounded-2 flex-grow-1 w-auto' style={{display: 'inline-flex'}}>
+                                    <InputGroup.Text className='t-input-group-text my-0 me-5'>Дата начала измерений</InputGroup.Text>
+                                    <Delim className='ms-5' />
                                     <OneDatePicker
                                         disabled={!edit}
-                                        selected={inputStartDate ? new Date(inputStartDate) : null}
+                                        selected={inputStartDate ? inputStartDate : null}
                                         onChange={(date: Date) => setInputStartDate(date)}
                                     />
-                                    {!edit && application.application_status === 'черновик' && <Button variant='dark' onClick={() => setEdit(true)}>✏️</Button>}
+                                    {application.application_status === 'черновик' && <Delim />}
+                                    {!edit && application.application_status === 'черновик' && <Button variant='outline-dark' onClick={() => setEdit(true)}>✏️</Button>}
                                     {edit && <Button variant='success' onClick={useUpdate}>✅</Button>}
                                     {edit && <Button
                                         variant='danger'
                                         onClick={() => {
                                             setInputStartDate(application.input_start_date ? new Date(application.input_start_date) : null);
-                                            setEdit(false)
+                                            setEdit(false);
                                         }}>
                                         ❌
                                     </Button>}
                                 </InputGroup>
+                                <br></br>
                                 {application.application_status != 'черновик' &&
                                     <InputGroup className='mb-1'>
                                         <InputGroup.Text className='w-25 t-input-group-text'>Статус рассчёта</InputGroup.Text>
@@ -174,9 +185,10 @@ const ForecastAppInfo = () => {
                                     </InputGroup>
                                 }
                                 {application.application_status == 'черновик' &&
-                                    <ButtonGroup className='flex-grow-1 w-100'>
-                                        <Button className='w-50' variant='success' onClick={confirm}>Сформировать и начать рассчёт</Button>
-                                        <Button className='w-50' variant='danger' onClick={deleteT}>Удалить</Button>
+                                    <ButtonGroup className='flex-grow-1 w-50 shadow-sm'>
+                                        <Button className='w-50' variant='outline-success' onClick={confirm}>Сформировать и начать рассчёт</Button>
+                                        <Delim />
+                                        <Button className='w-50' variant='outline-danger' onClick={deleteT}>Удалить</Button>
                                     </ButtonGroup>
                                 }
                                 {application.application_status == 'сформирован' && role == MODERATOR &&
@@ -194,8 +206,15 @@ const ForecastAppInfo = () => {
                                         <SmallDataTypeCard {...dataType}>
                                             {application.application_status == 'черновик' &&
                                                 <Button
+                                                    disabled={true}
+                                                    variant='secondary'
+                                                    className='m-0 py-6'>
+                                                </Button>
+                                            }
+                                            {application.application_status == 'черновик' &&
+                                                <Button
                                                     variant='outline-danger'
-                                                    className='mt-0 rounded-bottom'
+                                                    className='mt-0'
                                                     onClick={useDelFromTransportation(dataType.data_type_id)}>
                                                     Удалить
                                                 </Button>}

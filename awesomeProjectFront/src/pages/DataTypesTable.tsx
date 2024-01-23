@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Navbar, Form, Button, Table } from 'react-bootstrap';
+import { Navbar, Form, Button, Table, ButtonGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 
 import { getDataTypes, axiosAPI } from '../api'
 import { InterfaceDataTypeProps } from '../models'
@@ -19,6 +19,7 @@ const DataTypesTable = () => {
     const [dataTypes, setDataTypes] = useState<InterfaceDataTypeProps[]>([])
     const dispatch = useDispatch<AppDispatch>();
     const location = useLocation().pathname;
+    const navigate = useNavigate();
 
     const useGetDataTypes = () =>
         getDataTypes(searchText)
@@ -55,19 +56,19 @@ const DataTypesTable = () => {
                     <Form.Control
                         type="text"
                         placeholder="Поиск"
-                        className="form-control-sm flex-grow-1 shadow"
-                        data-bs-theme="dark"
+                        className="form-control-sm flex-grow-1 shadow-sm"
+                        data-bs-theme="outline-dark"
                         value={searchText}
                         onChange={(e) => dispatch(setDataTypeName(e.target.value))}
                     />
                     <Button
-                        variant="dark"
+                        variant="outline-dark"
                         size="sm"
                         type="submit"
-                        className="shadow-lg">
+                        className="shadow-sm">
                         🔎
                     </Button>
-                    <Link to='new' className='btn btn-sm btn-outline-dark shadow ms-sm-2'>➕</Link>
+                    <Link to='new' className='btn btn-sm btn-outline-dark shadow-sm ms-sm-2'>➕</Link>
                 </Form>
             </Navbar>
             < LoadAnimation loaded={dataTypes.length > 0}>
@@ -85,38 +86,28 @@ const DataTypesTable = () => {
                     <tbody>
                         {dataTypes.map((dataType) => (
                             <tr key={dataType.data_type_id}>
-                                <td style={{ width: '15%' }} className='p-0'>
+                                <td style={{ width: '15%' }} className='px-0 py-1'>
                                     <CardImage url={dataType.image_path} />
                                 </td>
                                 <td className='text-center'>{dataType.data_type_name}</td>
                                 <td className='text-center'>{`±${dataType.precision}`}</td>
                                 <td className='text-center'>{dataType.unit}</td>
                                 <td className='text-center'>{dataType.description}</td>
-                                <td className='text-center align-middle p-0'>
-                                    <Table className='m-0'>
-                                        <tbody>
-                                            <tr>
-                                                <td className='py-1 border-0' style={{ background: 'transparent' }}>
-                                                    <Link
-                                                        to={`/data_types-edit/${dataType.data_type_id}`}
-                                                        className='btn btn-sm btn-dark text-decoration-none w-100' >
-                                                        ✏️
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td className='py-1 border-0' style={{ background: 'transparent' }}>
-                                                    <Button
-                                                        variant='danger'
-                                                        size='sm'
-                                                        className='w-100'
-                                                        onClick={deleteDataType(dataType.data_type_id)}>
-                                                        Удалить
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </Table>
+                                <td className='text-center align-middle p-1 border-0'style={{ background: 'transparent' }}>
+                                    <ButtonGroup className='shadow-sm flex-grow-1 w-100'>
+                                        <Button
+                                            variant="outline-dark"
+                                            size='sm'
+                                            onClick={() => {navigate(`/data_types-edit/${dataType.data_type_id}`)}}>
+                                            ❓
+                                        </Button>
+                                        <Button
+                                            variant='outline-danger'
+                                            size='sm'
+                                            onClick={deleteDataType(dataType.data_type_id)}>
+                                            🗑️
+                                        </Button>
+                                    </ButtonGroup>
                                 </td>
                             </tr>
                         ))}

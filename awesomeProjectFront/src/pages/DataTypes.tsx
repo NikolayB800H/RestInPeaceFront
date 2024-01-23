@@ -70,16 +70,16 @@ const DataTypes = () => {
                     <Form.Control
                         type="text"
                         placeholder="Поиск"
-                        className="form-control-sm flex-grow-1 shadow"
-                        data-bs-theme="dark"
+                        className="form-control-sm flex-grow-1 shadow-sm"
+                        data-bs-theme="outline-dark"
                         value={searchText}
                         onChange={(e) => dispatch(setter(e.target.value))}
                     />
                     <Button
-                        variant="dark"
+                        variant="outline-dark"
                         size="sm"
                         type="submit"
-                        className="shadow-lg">
+                        className="shadow-sm">
                         🔎
                     </Button>
                 </Form>
@@ -91,8 +91,15 @@ const DataTypes = () => {
                             <SmallDataTypeCard {...dataType}>
                                 {role != 0 &&
                                     <Button
-                                        variant='outline-secondary'
-                                        className='mt-0 rounded-bottom'
+                                        disabled={true}
+                                        variant='secondary'
+                                        className='m-0 py-6'>
+                                    </Button>
+                                }
+                                {role != 0 &&
+                                    <Button
+                                        variant='outline-dark'
+                                        className='mt-0'
                                         onClick={useAddToForecastApplication(dataType.data_type_id)}>
                                         Добавить в корзину
                                     </Button>
@@ -102,14 +109,16 @@ const DataTypes = () => {
                     ))}
                 </LoadAnimation>
             </div>
-            {(!!role && draft) && <Link to={`/forecast_applications/${draft!.application_id}`}>
-                <Button
-                    style={{ position: 'fixed', bottom: '16px', right: '16px', zIndex: '1000' }}
-                    className="btn btn-dark rounded-pill"
-                    disabled={!draft}>
-                    🧺
-                </Button>
-            </Link>}
+            {(!!role && draft) && <div style={{ zIndex: '1000', margin: '5% auto'}} className="fixed-bottom container align-content-center d-flex justify-content-center">
+                <Link to={`/forecast_applications/${draft!.application_id}`}>
+                    <Button
+                        className="rounded-pill shadow-sm"
+                        variant="outline-dark"
+                        disabled={!draft}>
+                        Корзина
+                    </Button>
+                </Link>
+            </div>}
         </>
     )
 }

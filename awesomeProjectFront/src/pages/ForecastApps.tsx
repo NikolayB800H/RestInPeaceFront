@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Link } from 'react-router-dom';
-import { Navbar, Form, Button, Table, InputGroup, ButtonGroup } from 'react-bootstrap';
+import { Navbar, Form, Button, Table, InputGroup, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import { axiosAPI } from '../api';
 import { getForecastApplications } from '../api/ForecastApps';
 import { InterfaceForecastAppsProps } from "../models";
@@ -25,6 +25,17 @@ const ForecastApps = () => {
     const location = useLocation().pathname;
     const [loaded, setLoaded] = useState(false);
     const userFilter = useSelector((state: RootState) => state.search.user);
+    const [selectedKey, setSelectedKey] = useState("любой");
+
+    const handleSelect = (eventKey: string | null) => {
+        if (eventKey === null) return;
+        setSelectedKey(eventKey);
+        if (eventKey === "любой") {
+            dispatch(setStatus(""));
+        } else {
+            dispatch(setStatus(eventKey));
+        }
+    };
 
     const useGetData = () => {
         setLoaded(false)
@@ -70,17 +81,22 @@ const ForecastApps = () => {
                         <InputGroup.Text>Пользователь</InputGroup.Text>
                         <Form.Control value={userFilter} onChange={(e) => dispatch(setUser(e.target.value))} />
                     </InputGroup>}
-                    <InputGroup size='sm' className='shadow-sm'>
-                        <InputGroup.Text >Статус заявки</InputGroup.Text>
-                        <Form.Select
-                            defaultValue={statusFilter}
-                            onChange={(status) => dispatch(setStatus(status.target.value))}
+                    <InputGroup size='sm' className='shadow-sm rounded-1'>
+                        <InputGroup.Text>Статус заявки:</InputGroup.Text>
+                        <ButtonGroup size='sm' className='flex-grow-1 rounded-0'>
+                        <DropdownButton
+                            variant="outline-dark"
+                            menuVariant="dark"
+                            className="rounded-0"
+                            title={selectedKey}
+                            onSelect={handleSelect}
                         >
-                            <option value="">любой</option>
-                            <option value="сформирован">сформирован</option>
-                            <option value="завершён">завершён</option>
-                            <option value="отклонён">отклонён</option>
-                        </Form.Select>
+                        <Dropdown.Item eventKey="любой">любой</Dropdown.Item>
+                        <Dropdown.Item eventKey="сформирован">сформирован</Dropdown.Item>
+                        <Dropdown.Item eventKey="завершён">завершён</Dropdown.Item>
+                        <Dropdown.Item eventKey="отклонён">отклонён</Dropdown.Item>
+                        </DropdownButton>
+                        </ButtonGroup>
                     </InputGroup>
                     <DateTimePicker
                         startDate={startDate ? new Date(startDate) : null}
@@ -89,10 +105,10 @@ const ForecastApps = () => {
                         setEndDate={(date: Date) => dispatch(setDateEnd(date ? format(date, 'yyyy-MM-dd HH:mm:ss') : null))}
                     />
                     <Button
-                        variant="dark"
+                        variant="outline-dark"
                         size="sm"
                         type="submit"
-                        className="shadow-lg">
+                        className="shadow-sm">
                         🔎
                     </Button>
                 </Form>
@@ -127,14 +143,14 @@ const ForecastApps = () => {
                                             <tr>
                                                 <td className='py-1 border-0' style={{ background: 'transparent' }}>
                                                     <Link to={`${forecast_applications}/${application.application_id}`}
-                                                        className='btn btn-sm btn-outline-dark text-decoration-none w-100' >
+                                                        className='shadow-sm btn btn-sm btn-outline-dark text-decoration-none w-100' >
                                                         Подробнее
                                                     </Link>
                                                 </td>
                                             </tr>
                                             {application.application_status == 'сформирован' && role == MODERATOR && <tr>
                                                 <td className='py-1 border-0' style={{ background: 'transparent' }}>
-                                                    <ButtonGroup className='flex-grow-1 w-100'>
+                                                    <ButtonGroup className='shadow-sm flex-grow-1 w-100'>
                                                         <Button variant='outline-success' size='sm' onClick={moderator_confirm(application.application_id, "завершён")}>Одобрить завершение</Button>
                                                         <Button variant='outline-danger' size='sm' onClick={moderator_confirm(application.application_id, "отклонён")}>Отклонить</Button>
                                                     </ButtonGroup>

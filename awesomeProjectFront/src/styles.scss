@@ -3,10 +3,52 @@
 @import "../node_modules/bootstrap/scss/variables-dark";
 @import "../node_modules/bootstrap/scss/maps";
 @import "../node_modules/bootstrap/scss/mixins";
+
+$spacers: map-merge(
+    $spacers, (
+        6: $spacer*.01,
+    )
+);
+
 @import "../node_modules/bootstrap/scss/utilities";
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+ 
+body {
+  height: 100vh;
+  margin: 0;
+  background-size: 200% 200%;
+  background-image: linear-gradient(225deg, #ffd3c6, #e2f7ff, #d5daff);
+  animation: gradient 15s ease infinite;
+}
 
 $danger: #970000;
 $theme-colors: map-merge($theme-colors, ("danger": $danger));
+$dropdown-dark-bg: #fff;
+$dropdown-dark-link-active-bg: #dcdcdc;
+$dropdown-dark-link-hover-bg: $dropdown-dark-link-active-bg;
+$dropdown-dark-border-color: #aeaeae;
+$dropdown-dark-color: #000;
+$dropdown-border-width: 1px;
+$dropdown-dark-border-width: 1px;
+$dropdown-border-radius: 0.3rem;
+$dropdown-dark-border-radius: 0.3rem;
+$dropdown-dark-link-hover-color: #000;
+$dropdown-dark-link-color: #000;
+$dropdown-dark-link-active-color: #000;
+
+$body-bg: #00000000;
+$border-width: 0px;
 
 $box-shadow: 0 0.5rem 1rem rgba(186, 186, 186, 0.25);
 $box-shadow-sm: 0 .250rem .5rem rgba($black, .25);
@@ -64,23 +106,14 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0; 
 }
 
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
- }
- 
- body, .Card {
-  height: 100vh;
-  margin: 0;
-  background-size: 200% 200%;
-  background-image: linear-gradient(45deg, #fbd2c5, #e1e1e1, #e0f4fb, #b9f3e5);
-  animation: gradient 15s ease infinite;
- }
- 
+.input-group-text {
+  background-color: #00000000;
+}
+
+.no-rounded-pls {
+  border-radius: 0 !important;
+}
+
+.my-outline {
+  outline-color: rgba(0, 0, 0, 0) !important;
+}

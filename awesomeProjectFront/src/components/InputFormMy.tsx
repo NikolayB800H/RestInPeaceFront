@@ -1,9 +1,10 @@
-import { useEffect, useState, FC } from 'react';
+import { useEffect, useState, PropsWithChildren } from 'react';
 import { Col, InputGroup, Form, Button, } from 'react-bootstrap';
 import { format, addDays } from "date-fns";
 import { axiosAPI } from "../api";
+import { Delim } from '../components/Delim';
 
-interface InterfaceInputFormProps {
+interface InterfaceInputFormPropsPrep {
     input_first: number | null
     input_second: number | null
     input_third: number | null
@@ -11,10 +12,14 @@ interface InterfaceInputFormProps {
     data_type_id: string
     input_start_date: Date | null
     application_status: string
+}
+/*
+interface InterfaceInputFormProps extends InterfaceInputFormPropsPrep {
     children: React.ReactNode
 }
-
-const InputFormMy: FC<InterfaceInputFormProps> = ({ input_first, input_second, input_third, output, data_type_id, input_start_date, application_status, children }) => {
+*/
+const InputFormMy = ({ children, input_first, input_second, input_third, output, data_type_id, input_start_date, application_status }: PropsWithChildren<InterfaceInputFormPropsPrep>) => {
+    console.log(children);
     const [editInputs, setEditInputs] = useState(false);
     const [inputFirst, setInputFirst] = useState<number | null>(input_first);
     const [inputSecond, setInputSecond] = useState<number | null>(input_second);
@@ -56,10 +61,12 @@ const InputFormMy: FC<InterfaceInputFormProps> = ({ input_first, input_second, i
     }
 
     return (
-        <Col className='p-3 pt-1 px-0'>
+        <Col className='card shadow-sm p-0'>
             <InputGroup className='mb-1'>
                 <InputGroup.Text className='px-2 w-50 t-input-group-text'>{`Измер.${(input_start_date ? format(input_start_date, "dd-MM-yyyy") : ' день 1')}`}</InputGroup.Text>
+                <Delim />
                 <Form.Control
+                    placeholder='"1.0", например'
                     type='number'
                     readOnly={!editInputs}
                     value={inputFirst ? String(inputFirst) : ''}
@@ -68,7 +75,9 @@ const InputFormMy: FC<InterfaceInputFormProps> = ({ input_first, input_second, i
             </InputGroup>
             <InputGroup className='mb-1'>
                 <InputGroup.Text className='px-2 w-50 t-input-group-text'>{`Измер.${(input_start_date ? format(addDays(input_start_date, 1), "dd-MM-yyyy") : ' день 2')}`}</InputGroup.Text>
+                <Delim />
                 <Form.Control
+                    placeholder='"2.0", например'
                     type='number'
                     readOnly={!editInputs}
                     value={inputSecond ? String(inputSecond) : ''}
@@ -77,14 +86,16 @@ const InputFormMy: FC<InterfaceInputFormProps> = ({ input_first, input_second, i
             </InputGroup>
             <InputGroup className='mb-1'>
                 <InputGroup.Text className='px-2 w-50 t-input-group-text'>{`Измер.${(input_start_date ? format(addDays(input_start_date, 2), "dd-MM-yyyy") : ' день 3')}`}</InputGroup.Text>
+                <Delim />
                 <Form.Control
+                    placeholder='"3.0", например'
                     type='number'
                     readOnly={!editInputs}
                     value={inputThird ? String(inputThird) : ''}
                     onChange={(e) => setInputThird(parseFloat(e.target.value))}
                 />
             </InputGroup>
-            <InputGroup className='mb-1'>
+            <InputGroup className='container align-content-center d-flex justify-content-center'>
                 {application_status !== 'черновик' && <InputGroup className='mb-1'>
                     <InputGroup.Text className='px-2 w-50 t-input-group-text'>{`Ответ.${(input_start_date ? format(addDays(input_start_date, 3), "dd-MM-yyyy") : ' день 4')}`}</InputGroup.Text>
                     <Form.Control
@@ -92,7 +103,7 @@ const InputFormMy: FC<InterfaceInputFormProps> = ({ input_first, input_second, i
                         value={output ? output.toFixed(1) : 'Обнови страницу'}
                     />
                 </InputGroup>}
-                {!editInputs && application_status === 'черновик' && <Button variant='dark' onClick={() => {
+                {!editInputs && application_status === 'черновик' && <Button variant='outline-dark' className='shadow-sm mb-2 mt-0' onClick={() => {
                         setTempInputFirst(inputFirst);
                         setTempInputSecond(inputSecond);
                         setTempInputThird(inputThird);
@@ -102,11 +113,13 @@ const InputFormMy: FC<InterfaceInputFormProps> = ({ input_first, input_second, i
                 </Button>}
                 {editInputs && <Button
                     variant='success'
+                    className='shadow-sm mb-2 mt-0'
                     onClick={useSetInput(data_type_id, inputFirst, inputSecond, inputThird)}>
                     ✅
                 </Button>}
                 {editInputs && <Button
                     variant='danger'
+                    className='shadow-sm mb-2 mt-0'
                     onClick={() => {
                         setInputFirst(tempInputFirst);
                         setInputSecond(tempInputSecond);

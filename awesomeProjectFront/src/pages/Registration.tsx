@@ -29,7 +29,8 @@ const Registration: FC = () => {
                     <Form.Label>Логин</Form.Label>
                     <Form.Control
                         type="text"
-                        placeholder="Введите ваш логин"
+                        placeholder="Введите новый логин..."
+                        className="shadow-sm"
                         value={login}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setLogin(e.target.value)}
                     />
@@ -39,19 +40,21 @@ const Registration: FC = () => {
                     <Form.Label>Пароль</Form.Label>
                     <Form.Control
                         type="password"
-                        placeholder="Введите ваш пароль"
+                        placeholder="Введите и запомните пароль..."
+                        className="shadow-sm"
                         value={password}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                     />
                 </Form.Group>
 
                 <Button
-                    variant="dark"
+                    variant="outline-dark"
                     type="submit"
-                    className='mt-3 w-100'
+                    className='mt-3 w-100 shadow-sm'
                     disabled={!login || !password}
                 >
-                    Зарегистрироваться
+                    {(!login || !password) && <s>Зарегистрироваться</s>}
+                    {(login && password) && <div className='p-0 m-0'>Зарегистрироваться</div>}
                 </Button>
 
                 <Link to={'/authorization'}>

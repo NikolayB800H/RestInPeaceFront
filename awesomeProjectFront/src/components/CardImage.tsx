@@ -32,7 +32,11 @@ const CardImage = ({ url, className, ...props }: CardImageProps) => {
         console.error(`Error loading image: ${url}`);
     };
 
-    return <Card.Img src={src} className={className + ', img-fluid'} onError={handleError} {...props} />;
+    /*return (<>
+    {(src.endsWith(".jpg") === true) && <Card.Img src={src} className={className + ', img-fluid, px-5'} onError={handleError} {...props} />}
+    {(src.endsWith(".svg") === true) && <Card.Img src={src} className={className + ', img-fluid, px-5'} onError={handleError} {...props} />}
+    </>);*/
+    return <Card.Img src={src} className={className + ', img-fluid, px-5'} onError={handleError} {...props} />;
 };
 
 export default CardImage;

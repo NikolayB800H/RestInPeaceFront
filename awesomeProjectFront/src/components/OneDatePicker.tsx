@@ -17,13 +17,12 @@ const OneDatePicker: FC<DatePickerProps> = ({ disabled, selected, onChange }) =>
     const CustomInput = forwardRef<HTMLButtonElement, CustomInputProps>((props, ref) => {
         return (<Button
             disabled={props.disabled}
-            variant="outline-dark"
+            variant="outline-dark no-rounded-pls"
             ref={ref}
             size="sm"
-            className="w-100 text-nowrap"
+            className="w-100 text-nowrap h-100"
             {...props}
-        >
-            {props.value ? props.value : 'Тык'}
+        ><p className="fs-6 my-0 py-auto mx-1">{props.value ? props.value : 'Тык'}</p>
         </Button>)
     });
 
@@ -35,7 +34,7 @@ const OneDatePicker: FC<DatePickerProps> = ({ disabled, selected, onChange }) =>
             onChange={onChange}
             dateFormat="dd.MM.yyyy"
             customInput={<CustomInput />}
-            className="p-2 text-nowrap shadow-sm"
+            className="text-nowrap w-100 mx-0 h-100"
         />
     );
 };

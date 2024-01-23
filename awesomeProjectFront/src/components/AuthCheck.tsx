@@ -18,7 +18,7 @@ const AuthCheck: React.FC<InterfaceAuthCheckProps> = ({ children, allowedRoles }
     return allowedRoles.includes(userRole) ? (
         <>{children}</>
     ) : (
-        <h2 className="text-center">Для доступа к данной странице нужно авторизоваться</h2>
+        <h2 className="text-center position-absolute top-50 start-50 translate-middle">Для доступа к данной странице нужно авторизоваться</h2>
     );
 };
 

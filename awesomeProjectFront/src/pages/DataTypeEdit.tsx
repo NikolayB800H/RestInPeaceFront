@@ -165,7 +165,7 @@ const DataTypeEdit: FC = () => {
                                             {data_type_id != 'new' && <Button variant='danger' onClick={cancel}>❌</Button>}
                                         </ButtonGroup>
                                     ) : (
-                                        <div className='w-100 mx-0'>
+                                        <ButtonGroup className='w-100 mx-0 px-3'>
                                             <Button
                                                 className='w-50'
                                                 variant='dark'
@@ -178,7 +178,7 @@ const DataTypeEdit: FC = () => {
                                             onClick={useDeleteDataType}>
                                                 Удалить
                                             </Button>
-                                        </div>
+                                        </ButtonGroup>
                                     )}
                                 </Form>
                             </Col>
