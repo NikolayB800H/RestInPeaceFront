@@ -2,13 +2,11 @@ import { FC, useEffect, useState, ChangeEvent, useRef } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import { Card, Row, Navbar, InputGroup, Form, Col, Button, ButtonGroup } from 'react-bootstrap';
-
 import { axiosAPI, getDataType } from '../api'
 import { InterfaceDataTypeProps } from '../models';
-
 import { AppDispatch } from "../store";
 import { addToHistory } from "../store/historySlice"
-
+import { Delim } from '../components/Delim';
 import LoadAnimation from '../components/LoadAnimation';
 import CardImage from '../components/CardImage';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -129,27 +127,32 @@ const DataTypeEdit: FC = () => {
                             <Col className='d-flex flex-column col-12 col-md-4 p-0'>
                                 <Form noValidate validated={edit} onSubmit={save}>
                                     <Card.Body className='flex-grow-1'>
-                                        <InputGroup hasValidation className='mb-1'>
+                                        <InputGroup hasValidation className='mb-3 shadow-sm rounded-2'>
                                             <InputGroup.Text className='c-input-group-text'>Название</InputGroup.Text>
+                                            <Delim />
                                             <Form.Control id='data_type_name' required type='text' value={dataType.data_type_name} readOnly={!edit} onChange={changeString} />
                                         </InputGroup>
-                                        <InputGroup className='mb-1'>
+                                        <InputGroup className='mb-3 shadow-sm rounded-2'>
                                             <InputGroup.Text className='c-input-group-text'>Погрешность</InputGroup.Text>
+                                            <Delim />
                                             <Form.Control id='precision' required type='number' value={isNaN(dataType.precision) ? '' : dataType.precision} readOnly={!edit} onChange={changeNumber} />
                                         </InputGroup>
-                                        <InputGroup className='mb-1'>
+                                        <InputGroup className='mb-3 shadow-sm rounded-2'>
                                             <InputGroup.Text className='c-input-group-text'>Описание</InputGroup.Text>
-                                            <Form.Control id='description' required value={dataType.description} readOnly={!edit} onChange={changeString} />
+                                            <Delim />
+                                            <Form.Control style={{ height: 90 }} as="textarea" id='description' required value={dataType.description} readOnly={!edit} onChange={changeString} />
                                         </InputGroup>
-                                        <InputGroup className='mb-1'>
+                                        <InputGroup className='mb-3 shadow-sm rounded-2'>
                                             <InputGroup.Text className='c-input-group-text'>Ед. изм.</InputGroup.Text>
+                                            <Delim />
                                             <Form.Control id='unit' required value={dataType.unit} readOnly={!edit} onChange={changeString} />
                                         </InputGroup>
-                                        <InputGroup className='mb-1'>
+                                        <InputGroup className='mb-3 shadow-sm rounded-2'>
                                             <InputGroup.Text className='c-input-group-text'>Статус</InputGroup.Text>
+                                            <Delim />
                                             <Form.Control id='data_type_status' required value={dataType.data_type_status} readOnly={true} />
                                         </InputGroup>
-                                        <Form.Group className="mb-1">
+                                        <Form.Group className="mb-3 shadow-sm rounded-2 text-center">
                                             <Form.Label>Выберите изображение</Form.Label>
                                             <Form.Control
                                                 disabled={!edit}
@@ -165,16 +168,17 @@ const DataTypeEdit: FC = () => {
                                             {data_type_id != 'new' && <Button variant='danger' onClick={cancel}>❌</Button>}
                                         </ButtonGroup>
                                     ) : (
-                                        <ButtonGroup className='w-100 mx-0 px-3'>
+                                        <ButtonGroup className='w-75 mx-3 px-0 shadow-sm'>
                                             <Button
                                                 className='w-50'
-                                                variant='dark'
+                                                variant='outline-dark'
                                                 onClick={() => setEdit(true)}>
                                                 ✏️
                                             </Button>
+                                            <Delim />
                                             <Button
                                             className='w-50'
-                                            variant='danger'
+                                            variant='outline-danger'
                                             onClick={useDeleteDataType}>
                                                 Удалить
                                             </Button>

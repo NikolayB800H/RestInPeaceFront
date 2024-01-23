@@ -134,9 +134,9 @@ const ForecastAppInfo = () => {
                     <Navbar>
                         <Breadcrumbs />
                     </Navbar>
-                    <Col className='p-3 pt-1'>
+                    <Col className='pt-1'>
                         <Card className='shadow-sm text center text-md-start'>
-                            <Card.Body>
+                            <Card.Body className='pt-1'>
                                 <InputGroup className='mb-3 shadow-sm rounded-2'>
                                     <InputGroup.Text className='w-25 t-input-group-text'>Статус заявки</InputGroup.Text>
                                     <Delim />
@@ -147,12 +147,12 @@ const ForecastAppInfo = () => {
                                     <Delim />
                                     <Form.Control readOnly value={application.application_creation_date} />
                                 </InputGroup>
-                                <InputGroup className='mb-3 shadow-sm rounded-2'>
+                                {application.application_status != 'черновик' && <InputGroup className='mb-3 shadow-sm rounded-2'>
                                     <InputGroup.Text className='w-25 t-input-group-text'>Сформирована</InputGroup.Text>
                                     <Delim />
                                     <Form.Control readOnly value={application.application_formation_date ? application.application_formation_date : ''} />
-                                </InputGroup>
-                                {(application.application_status == 'отклонён' || application.application_status == 'завершён') && <InputGroup className='mb-1'>
+                                </InputGroup>}
+                                {(application.application_status == 'отклонён' || application.application_status == 'завершён') && <InputGroup className='mb-3 shadow-sm rounded-2'>
                                     <InputGroup.Text className='w-25 t-input-group-text'>{application.application_status === 'отклонён' ? 'отклонён' : 'завершён'}</InputGroup.Text>
                                     <Form.Control readOnly value={application.application_completion_date ? application.application_completion_date : ''} />
                                 </InputGroup>
@@ -179,8 +179,9 @@ const ForecastAppInfo = () => {
                                 </InputGroup>
                                 <br></br>
                                 {application.application_status != 'черновик' &&
-                                    <InputGroup className='mb-1'>
+                                    <InputGroup className='shadow-sm rounded-2'>
                                         <InputGroup.Text className='w-25 t-input-group-text'>Статус рассчёта</InputGroup.Text>
+                                        <Delim />
                                         <Form.Control readOnly value={application.calculate_status ? application.calculate_status : ''} />
                                     </InputGroup>
                                 }

@@ -1,6 +1,7 @@
-import { Button, ButtonGroup } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { forwardRef, ButtonHTMLAttributes, FC } from 'react';
 import DatePicker from 'react-datepicker';
+import { Delim } from '../components/Delim';
 
 interface DatePickerProps {
     startDate:    Date | null | undefined;
@@ -49,6 +50,7 @@ const DateTimePicker: FC<DatePickerProps> = ({ startDate, setStartDate, endDate,
             customInput={<CustomInput myName='Начало отрезка времени' classSuffix="rounded-left" />}
             className="text-nowrap"
         />
+        <Delim />
         <DatePicker
             enableTabLoop={false}
             selected={endDate}

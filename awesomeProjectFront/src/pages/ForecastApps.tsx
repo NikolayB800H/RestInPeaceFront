@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from "../store";
 import { setUser, setStatus, setDateStart, setDateEnd } from "../store/searchSlice";
 import { clearHistory, addToHistory } from "../store/historySlice";
 import LoadAnimation from '../components/LoadAnimation';
+import { Delim } from '../components/Delim';
 import { MODERATOR } from '../components/AuthCheck'
 import DateTimePicker from '../components/DatePicker';
 
@@ -77,12 +78,14 @@ const ForecastApps = () => {
         <>
             <Navbar>
                 <Form className="d-flex flex-row align-items-stretch flex-grow-1 gap-2" onSubmit={useHandleSearch}>
-                    {role == MODERATOR && <InputGroup size='sm' className='shadow-sm'>
+                    {role == MODERATOR && <InputGroup size='sm' className='shadow-sm rounded-1'>
                         <InputGroup.Text>Пользователь</InputGroup.Text>
+                        <Delim />
                         <Form.Control value={userFilter} onChange={(e) => dispatch(setUser(e.target.value))} />
                     </InputGroup>}
                     <InputGroup size='sm' className='shadow-sm rounded-1'>
                         <InputGroup.Text>Статус заявки:</InputGroup.Text>
+                        <Delim />
                         <ButtonGroup size='sm' className='flex-grow-1 rounded-0'>
                         <DropdownButton
                             variant="outline-dark"
@@ -152,6 +155,7 @@ const ForecastApps = () => {
                                                 <td className='py-1 border-0' style={{ background: 'transparent' }}>
                                                     <ButtonGroup className='shadow-sm flex-grow-1 w-100'>
                                                         <Button variant='outline-success' size='sm' onClick={moderator_confirm(application.application_id, "завершён")}>Одобрить завершение</Button>
+                                                        <Delim />
                                                         <Button variant='outline-danger' size='sm' onClick={moderator_confirm(application.application_id, "отклонён")}>Отклонить</Button>
                                                     </ButtonGroup>
                                                 </td>

@@ -94,18 +94,23 @@ const DataTypesTable = () => {
                                 <td className='text-center'>{dataType.unit}</td>
                                 <td className='text-center'>{dataType.description}</td>
                                 <td className='text-center align-middle p-1 border-0'style={{ background: 'transparent' }}>
-                                    <ButtonGroup className='shadow-sm flex-grow-1 w-100'>
+                                    <ButtonGroup className='shadow-sm flex-grow-1 w-100 rounded-1' vertical>
                                         <Button
                                             variant="outline-dark"
                                             size='sm'
                                             onClick={() => {navigate(`/data_types-edit/${dataType.data_type_id}`)}}>
-                                            ❓
+                                            Редактировать
+                                        </Button>
+                                        <Button
+                                            disabled={true}
+                                            variant='secondary'
+                                            className='m-0 py-6'>
                                         </Button>
                                         <Button
                                             variant='outline-danger'
                                             size='sm'
                                             onClick={deleteDataType(dataType.data_type_id)}>
-                                            🗑️
+                                            Удалить
                                         </Button>
                                     </ButtonGroup>
                                 </td>

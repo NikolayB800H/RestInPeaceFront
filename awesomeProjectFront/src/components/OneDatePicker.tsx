@@ -13,6 +13,8 @@ interface CustomInputProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
+//            style={{marginBottom: '-10px', marginTop: '-5px', overflow: 'hidden'}}
+
 const OneDatePicker: FC<DatePickerProps> = ({ disabled, selected, onChange }) => {
     const CustomInput = forwardRef<HTMLButtonElement, CustomInputProps>((props, ref) => {
         return (<Button
@@ -21,8 +23,9 @@ const OneDatePicker: FC<DatePickerProps> = ({ disabled, selected, onChange }) =>
             ref={ref}
             size="sm"
             className="w-100 text-nowrap h-100"
+            style={{marginBottom: '-2px', marginTop: '0px', overflow: 'hidden'}}
             {...props}
-        ><p className="fs-6 my-0 py-auto mx-1">{props.value ? props.value : 'Тык'}</p>
+        ><p className="fs-6 my-0 mx-1">{props.value ? props.value : 'Тык'}</p>
         </Button>)
     });
 
@@ -34,7 +37,7 @@ const OneDatePicker: FC<DatePickerProps> = ({ disabled, selected, onChange }) =>
             onChange={onChange}
             dateFormat="dd.MM.yyyy"
             customInput={<CustomInput />}
-            className="text-nowrap w-100 mx-0 h-100"
+            className="text-nowrap w-100 mx-0 h-100 py-2 no-overflow"
         />
     );
 };
