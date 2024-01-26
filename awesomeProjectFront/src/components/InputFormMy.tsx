@@ -127,7 +127,7 @@ const InputFormMy = ({ children, input_first, input_second, input_third, output,
                         setInputThird(tempInputThird);
                         setEditInputs(false)
                     }}>
-                    ❌
+                    🚫
                 </Button>}
             </InputGroup>
         </Col>

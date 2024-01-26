@@ -68,7 +68,7 @@ const DataTypesTable = () => {
                         className="shadow-sm">
                         🔎
                     </Button>
-                    <Link to='new' className='btn btn-sm btn-outline-dark shadow-sm ms-sm-2'>➕</Link>
+                    <Link to='new' className='btn btn-sm btn-outline-dark shadow-sm'>➕</Link>
                 </Form>
             </Navbar>
             < LoadAnimation loaded={dataTypes.length > 0}>

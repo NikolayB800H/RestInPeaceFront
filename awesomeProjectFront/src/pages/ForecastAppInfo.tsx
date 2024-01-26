@@ -134,9 +134,9 @@ const ForecastAppInfo = () => {
                     <Navbar>
                         <Breadcrumbs />
                     </Navbar>
-                    <Col className='pt-1'>
+                    <Col className='pt-1 gap-2'>
                         <Card className='shadow-sm text center text-md-start'>
-                            <Card.Body className='pt-1'>
+                            <Card.Body className='pt-1 pb-2'>
                                 <InputGroup className='mb-3 shadow-sm rounded-2'>
                                     <InputGroup.Text className='w-25 t-input-group-text'>Статус заявки</InputGroup.Text>
                                     <Delim />
@@ -174,35 +174,36 @@ const ForecastAppInfo = () => {
                                             setInputStartDate(application.input_start_date ? new Date(application.input_start_date) : null);
                                             setEdit(false);
                                         }}>
-                                        ❌
+                                        🚫
                                     </Button>}
                                 </InputGroup>
                                 <br></br>
                                 {application.application_status != 'черновик' &&
-                                    <InputGroup className='shadow-sm rounded-2'>
+                                    <InputGroup className='mb-3 shadow-sm rounded-2'>
                                         <InputGroup.Text className='w-25 t-input-group-text'>Статус рассчёта</InputGroup.Text>
                                         <Delim />
                                         <Form.Control readOnly value={application.calculate_status ? application.calculate_status : ''} />
                                     </InputGroup>
                                 }
                                 {application.application_status == 'черновик' &&
-                                    <ButtonGroup className='flex-grow-1 w-50 shadow-sm'>
+                                    <ButtonGroup className='w-50 shadow-sm'>
                                         <Button className='w-50' variant='outline-success' onClick={confirm}>Сформировать и начать рассчёт</Button>
                                         <Delim />
                                         <Button className='w-50' variant='outline-danger' onClick={deleteT}>Удалить</Button>
                                     </ButtonGroup>
                                 }
                                 {application.application_status == 'сформирован' && role == MODERATOR &&
-                                    <ButtonGroup className='flex-grow-1 w-100'>
-                                        <Button variant='success' onClick={moderator_confirm("завершён")}>Одобрить завершение</Button>
-                                        <Button variant='danger' onClick={moderator_confirm("отклонён")}>Отклонить</Button>
+                                    <ButtonGroup className='w-50 shadow-sm'>
+                                        <Button className='w-50' variant='outline-success' onClick={moderator_confirm("завершён")}>Одобрить завершение</Button>
+                                        <Delim />
+                                        <Button className='w-50' variant='outline-danger' onClick={moderator_confirm("отклонён")}>Отклонить</Button>
                                     </ButtonGroup>
                                 }
                             </Card.Body>
                         </Card>
                         {composition && <Row className='row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 px-1 mt-2'>
                             {composition.map((dataType) => (
-                                <div className='d-flex p-2 justify-content-center' key={dataType.data_type_id}>
+                                <div className='d-flex px-2 pb-2 justify-content-center' key={dataType.data_type_id}>
                                     <Stack gap={2}>
                                         <SmallDataTypeCard {...dataType}>
                                             {application.application_status == 'черновик' &&

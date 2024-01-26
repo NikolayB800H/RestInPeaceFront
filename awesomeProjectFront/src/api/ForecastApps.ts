@@ -1,12 +1,12 @@
 import { format } from 'date-fns';
 
 import { axiosAPI } from ".";
-import { InterfaceDataTypeExtendedProps, InterfaceForecastAppsProps } from "../models";
+import { InterfaceDataTypeExtendedProps, InterfaceForecastAppsExtendedProps, InterfaceForecastAppsProps } from "../models";
 
 const forecast_applications = '/forecast_applications';
 
 interface ForecastApplicationsResponse {
-    applications: InterfaceForecastAppsProps[]
+    applications: InterfaceForecastAppsExtendedProps[]
 }
 
 function formatDate(date: Date | null): string {
@@ -28,7 +28,7 @@ export async function getForecastApplications(
     status: string,
     startDate: string | null,
     endDate: string | null
-): Promise<InterfaceForecastAppsProps[]> {
+): Promise<InterfaceForecastAppsExtendedProps[]> {
     const accessToken = localStorage.getItem('access_token');
     if (!accessToken) {
         return [];
@@ -51,8 +51,8 @@ export async function getForecastApplications(
         })
         .then((response) =>
             response.data.applications
-                .filter((tr: InterfaceForecastAppsProps) => tr.creator.toLowerCase().includes(user.toLowerCase()))
-                .map((tr: InterfaceForecastAppsProps) => ({
+                .filter((tr: InterfaceForecastAppsExtendedProps) => tr.creator.toLowerCase().includes(user.toLowerCase()))
+                .map((tr: InterfaceForecastAppsExtendedProps) => ({
                 ...tr,
                 application_creation_date: formatDate(new Date(tr.application_creation_date)),
                 application_formation_date: tr.application_formation_date

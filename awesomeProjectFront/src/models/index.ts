@@ -26,16 +26,14 @@ export interface InterfaceShortDraft {
     data_type_count: number
 }
 
-export interface InterfaceDataTypeExtendedProps {
-    data_type_id: string
-    image_path: string
-    data_type_name: string
-    precision: number
-    description: string
-    unit: string
-    data_type_status: string
+export interface InterfaceDataTypeExtendedProps extends InterfaceDataTypeProps {
     input_first: number | null
     input_second: number | null
     input_third: number | null
     output: number | null
+}
+
+export interface InterfaceForecastAppsExtendedProps extends InterfaceForecastAppsProps {
+    calculated: number
+    total: number
 }

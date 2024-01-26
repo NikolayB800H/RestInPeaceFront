@@ -5,7 +5,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { Navbar, Form, Button, Table, InputGroup, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import { axiosAPI } from '../api';
 import { getForecastApplications } from '../api/ForecastApps';
-import { InterfaceForecastAppsProps } from "../models";
+import { InterfaceForecastAppsExtendedProps } from "../models";
 import { AppDispatch, RootState } from "../store";
 import { setUser, setStatus, setDateStart, setDateEnd } from "../store/searchSlice";
 import { clearHistory, addToHistory } from "../store/historySlice";
@@ -17,7 +17,7 @@ import DateTimePicker from '../components/DatePicker';
 const forecast_applications = '/forecast_applications';
 
 const ForecastApps = () => {
-    const [forecastApplications, setForecastApplications] = useState<InterfaceForecastAppsProps[]>([])
+    const [forecastApplications, setForecastApplications] = useState<InterfaceForecastAppsExtendedProps[]>([])
     const statusFilter = useSelector((state: RootState) => state.search.status);
     const startDate = useSelector((state: RootState) => state.search.formationDateStart);
     const endDate = useSelector((state: RootState) => state.search.formationDateEnd);
@@ -43,7 +43,7 @@ const ForecastApps = () => {
         getForecastApplications(userFilter, statusFilter, startDate, endDate)
             .then((data) => {
                 setLoaded(true);
-                setForecastApplications(data)
+                setForecastApplications(data);
             })/*
             .catch((error) => {
                 console.error("Error fetching data:", error);
@@ -123,6 +123,16 @@ const ForecastApps = () => {
                             {role == MODERATOR && <th className='text-center'>Создатель</th>}
                             <th className='text-center'>Статус</th>
                             <th className='text-center'>Статус рассчёта</th>
+                            <th className='text-center'>{"Рассчитано " + ((forecastApplications) => {
+                                    let calculated = 0;
+                                    let total = 0;
+                                    forecastApplications.map((application) => {
+                                        calculated += application.calculated;
+                                        total += application.total;
+                                    });
+                                    return `${calculated} / ${total}`;
+                                })(forecastApplications)}
+                            </th>
                             <th className='text-center'>Дата создания</th>
                             <th className='text-center'>Дата формирования</th>
                             <th className='text-center'>Дата завершения</th>
@@ -136,6 +146,7 @@ const ForecastApps = () => {
                                 {role == MODERATOR && <td className='text-center'>{application.creator} </td>}
                                 <td className='text-center'>{application.application_status}</td>
                                 <td className='text-center'>{application.calculate_status}</td>
+                                <td className='text-center'>{application.calculated} из {application.total}</td>
                                 <td className='text-center'>{application.application_creation_date}</td>
                                 <td className='text-center'>{application.application_formation_date}</td>
                                 <td className='text-center'>{application.application_completion_date}</td>

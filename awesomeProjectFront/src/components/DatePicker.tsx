@@ -50,7 +50,7 @@ const DateTimePicker: FC<DatePickerProps> = ({ startDate, setStartDate, endDate,
             customInput={<CustomInput myName='Начало отрезка времени' classSuffix="rounded-left" />}
             className="text-nowrap"
         />
-        <Delim />
+        <Delim className="h-100"/>
         <DatePicker
             enableTabLoop={false}
             selected={endDate}

@@ -12,15 +12,15 @@ interface InterfaceCardProps extends InterfaceDataTypeProps {
 export const SmallDataTypeCard: FC<InterfaceCardProps> = ({ children, data_type_id, image_path, data_type_name, precision, unit }) => {
     const navigate = useNavigate();
     return (
-    <Card className='w-100 mx-auto px-0 shadow-sm text-center'>
+    <Card className='w-100 mx-auto px-3 pt-1 pb-2 shadow-sm text-center'>
         <div className="ratio ratio-16x9 overflow-hidden">
             <CardImage url={image_path} className='rounded object-fit-cover'/>
         </div>
-        <Card.Body className='flex-grow-1'>
-            <Card.Title as="h6">Прогноз {data_type_name} (в {unit})</Card.Title>
+        <Card.Body className='flex-grow-1 pb-1 pt-1'>
+            <Card.Title className='mb-0' as="h6">Прогноз {data_type_name} (в {unit})</Card.Title>
             <Card.Text>Погрешность ±{precision} {unit}</Card.Text>
         </Card.Body>
-        <ButtonGroup className='mx-3 mb-3 mt-0 shadow-sm d-flex p-0 justify-content-center rounded-2' vertical>
+        <ButtonGroup className='mt-0 shadow-sm d-flex p-0 justify-content-center rounded-2' vertical>
             <Button
                 variant="outline-dark"
                 className='mt-0'
