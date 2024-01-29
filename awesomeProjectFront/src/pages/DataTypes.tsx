@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -21,6 +21,7 @@ const DataTypes = () => {
     const role = useSelector((state: RootState) => state.user.role);
     const dispatch = useDispatch<AppDispatch>();
     const location = useLocation().pathname;
+    const navigate = useNavigate();
 
     const useGetDataTypes = () =>
         getDataTypes(searchText)
@@ -109,15 +110,15 @@ const DataTypes = () => {
                     ))}
                 </LoadAnimation>
             </div>
-            {(!!role && draft) && <div style={{ zIndex: '1000', margin: '5% auto'}} className="fixed-bottom container align-content-center d-flex justify-content-center">
-                <Link to={`/forecast_applications/${draft!.application_id}`}>
-                    <Button
-                        className="rounded-pill shadow-sm"
-                        variant="outline-dark"
-                        disabled={!draft}>
-                        Корзина
-                    </Button>
-                </Link>
+            {!!role && <div style={{ zIndex: '1000', margin: '5% auto'}} className="fixed-bottom container align-content-center d-flex justify-content-center">
+                <Button
+                    className="rounded-pill shadow-sm"
+                    variant="outline-dark"
+                    disabled={!draft}
+                    onClick={() => navigate(`/forecast_applications/${draft ? draft.application_id : ''}`)}>
+                    {draft && <div className='p-0 m-0'>Корзина</div>}
+                    {!draft && <s>Корзина</s>}
+                </Button>
             </div>}
         </>
     )

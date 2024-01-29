@@ -19,8 +19,9 @@ const DataTypeEdit: FC = () => {
     const location = useLocation().pathname;
     const [edit, setEdit] = useState<boolean>(false)
     const [image, setImage] = useState<File | undefined>(undefined);
+    const [showImage, setShowImage] = useState<Boolean>(true);
     const inputFile = useRef<HTMLInputElement | null>(null);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getData = async () => {
@@ -50,9 +51,7 @@ const DataTypeEdit: FC = () => {
                 setLoaded(true);
             }
         }
-
         getData();
-
     }, [dispatch]);
 
     const changeString = (e: ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +69,7 @@ const DataTypeEdit: FC = () => {
     }
 
     const save = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+        event.preventDefault();
         const formElement = event.currentTarget;
         if (!formElement.checkValidity()) {
             return
@@ -97,8 +96,10 @@ const DataTypeEdit: FC = () => {
             axiosAPI.post(`/data_types`, formData, { headers: { 'Authorization': `Bearer${accessToken}`, } })
                 .then((response) => getDataType(response.data).then((data) => setDataType(data)))
         } else {
+            setShowImage(false);
+            console.log('save')
             axiosAPI.put(`/data_types/${dataType?.data_type_id}`, formData, { headers: { 'Authorization': `Bearer${accessToken}`, } })
-                .then(() => getDataType(data_type_id).then((data) => setDataType(data)))
+                .then(() => getDataType(data_type_id).then((data) => {setDataType(data); setShowImage(true);}))
         }
     }
 
@@ -122,7 +123,8 @@ const DataTypeEdit: FC = () => {
                     <Card className='shadow-lg mb-3'>
                         <Row className='m-0'>
                             <Col className='col-12 col-md-8 overflow-hidden p-0'>
-                                <CardImage url={dataType.image_path} />
+                                {showImage && <CardImage url={dataType.image_path} />}
+                                {!showImage && <div className='px-5 my-0' style={{width:'800px', height: '760px'}}></div>}
                             </Col>
                             <Col className='d-flex flex-column col-12 col-md-4 p-0'>
                                 <Form noValidate validated={edit} onSubmit={save}>
@@ -163,13 +165,14 @@ const DataTypeEdit: FC = () => {
                                         </Form.Group>
                                     </Card.Body>
                                     {edit ? (
-                                        <ButtonGroup className='w-100 mx-0'>
-                                            <Button variant='success' type='submit'>✅</Button>
-                                            {data_type_id != 'new' && <Button variant='danger' onClick={cancel}>❌</Button>}
+                                        <ButtonGroup className='w-75 mx-3 px-0 shadow-sm'>
+                                            <Button key='submit-edited' variant='success' type="submit">✅</Button>
+                                            {data_type_id != 'new' && <Button key='drop-changes' variant='danger' onClick={cancel}>🚫</Button>}
                                         </ButtonGroup>
                                     ) : (
                                         <ButtonGroup className='w-75 mx-3 px-0 shadow-sm'>
                                             <Button
+                                                key='allow-edit'
                                                 className='w-50'
                                                 variant='outline-dark'
                                                 onClick={() => setEdit(true)}>

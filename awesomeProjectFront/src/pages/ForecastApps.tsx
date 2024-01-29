@@ -130,7 +130,7 @@ const ForecastApps = () => {
                                         calculated += application.calculated;
                                         total += application.total;
                                     });
-                                    return `${calculated} / ${total}`;
+                                    return `${calculated}/${total}`;
                                 })(forecastApplications)}
                             </th>
                             <th className='text-center'>Дата создания</th>

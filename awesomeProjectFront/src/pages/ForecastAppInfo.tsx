@@ -26,9 +26,11 @@ const ForecastAppInfo = () => {
     const [inputStartDate, setInputStartDate] = useState<Date | null>(null);
     const navigate = useNavigate();
     const role = useSelector((state: RootState) => state.user.role);
+    const [shouldNotSend, setShouldNotSend] = useState(0);
 
     const useGetData = () => {
-        setLoaded(false)
+        setLoaded(false);
+        setShouldNotSend(0);
         getForecastApplication(application_id)
             .then(data => {
                 if (data === null) {
@@ -93,7 +95,7 @@ const ForecastAppInfo = () => {
 
     const confirm = () => {
         const accessToken = localStorage.getItem('access_token');
-        if (!accessToken || inputStartDate === null) {
+        if (!accessToken || inputStartDate === null || shouldNotSend != 0) {
             return
         }
         axiosAPI.put('/forecast_applications/user_confirm', null, { headers: { 'Authorization': `Bearer${accessToken}`, } })
@@ -153,7 +155,8 @@ const ForecastAppInfo = () => {
                                     <Form.Control readOnly value={application.application_formation_date ? application.application_formation_date : ''} />
                                 </InputGroup>}
                                 {(application.application_status == 'отклонён' || application.application_status == 'завершён') && <InputGroup className='mb-3 shadow-sm rounded-2'>
-                                    <InputGroup.Text className='w-25 t-input-group-text'>{application.application_status === 'отклонён' ? 'отклонён' : 'завершён'}</InputGroup.Text>
+                                    <InputGroup.Text className='w-25 t-input-group-text'>{'Прогноз ' + (application.application_status === 'отклонён' ? 'отклонён' : 'завершён')}</InputGroup.Text>
+                                    <Delim />
                                     <Form.Control readOnly value={application.application_completion_date ? application.application_completion_date : ''} />
                                 </InputGroup>
                                 }
@@ -187,7 +190,10 @@ const ForecastAppInfo = () => {
                                 }
                                 {application.application_status == 'черновик' &&
                                     <ButtonGroup className='w-50 shadow-sm'>
-                                        <Button className='w-50' variant='outline-success' onClick={confirm}>Сформировать и начать рассчёт</Button>
+                                        <Button disabled={inputStartDate === null || edit || shouldNotSend != 0} className='w-50' variant='outline-success' onClick={confirm}>
+                                            {(inputStartDate !== null && !edit && shouldNotSend == 0) && <div className='p-0 m-0'>Сформировать и начать рассчёт</div>}
+                                            {(inputStartDate === null || edit || shouldNotSend != 0) && <s>Сформировать и начать рассчёт</s>}
+                                        </Button>
                                         <Delim />
                                         <Button className='w-50' variant='outline-danger' onClick={deleteT}>Удалить</Button>
                                     </ButtonGroup>
@@ -223,7 +229,10 @@ const ForecastAppInfo = () => {
                                         </SmallDataTypeCard>
                                         <InputFormMy {...dataType}
                                             input_start_date={inputStartDate}
-                                            application_status={application.application_status}>
+                                            application_status={application.application_status}
+                                            upper_should_not_send={shouldNotSend}
+                                            set_upper_should_not_send={setShouldNotSend}
+                                            get_data={useGetData}>
                                         </InputFormMy>
                                     </Stack>
                                 </div>

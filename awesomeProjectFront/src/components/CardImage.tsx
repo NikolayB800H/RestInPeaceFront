@@ -13,7 +13,7 @@ const CardImage = ({ url, className, ...props }: CardImageProps) => {
 
     useEffect(() => {
         if (!url) {
-            return
+            return;
         }
         axios.get(url, { responseType: 'blob' })
             .then(response => {
@@ -25,17 +25,15 @@ const CardImage = ({ url, className, ...props }: CardImageProps) => {
             .catch(error => {
                 console.error(error.message);
             });
-
+        return () => {
+            URL.revokeObjectURL(src);
+        }
     }, [url]);
 
     const handleError = () => {
         console.error(`Error loading image: ${url}`);
     };
 
-    /*return (<>
-    {(src.endsWith(".jpg") === true) && <Card.Img src={src} className={className + ', img-fluid, px-5'} onError={handleError} {...props} />}
-    {(src.endsWith(".svg") === true) && <Card.Img src={src} className={className + ', img-fluid, px-5'} onError={handleError} {...props} />}
-    </>);*/
     return <Card.Img src={src} className={className + ', img-fluid, px-5'} onError={handleError} {...props} />;
 };
 

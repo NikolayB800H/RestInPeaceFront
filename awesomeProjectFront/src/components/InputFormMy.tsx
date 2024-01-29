@@ -1,4 +1,4 @@
-import { useEffect, useState, PropsWithChildren } from 'react';
+import { useEffect, useState, PropsWithChildren} from 'react';
 import { Col, InputGroup, Form, Button, } from 'react-bootstrap';
 import { format, addDays } from "date-fns";
 import { axiosAPI } from "../api";
@@ -12,13 +12,12 @@ interface InterfaceInputFormPropsPrep {
     data_type_id: string
     input_start_date: Date | null
     application_status: string
+    upper_should_not_send: number
+    set_upper_should_not_send: any
+    get_data: any
 }
-/*
-interface InterfaceInputFormProps extends InterfaceInputFormPropsPrep {
-    children: React.ReactNode
-}
-*/
-const InputFormMy = ({ children, input_first, input_second, input_third, output, data_type_id, input_start_date, application_status }: PropsWithChildren<InterfaceInputFormPropsPrep>) => {
+
+const InputFormMy = ({ children, input_first, input_second, input_third, output, data_type_id, input_start_date, application_status, upper_should_not_send, set_upper_should_not_send, get_data }: PropsWithChildren<InterfaceInputFormPropsPrep>) => {
     console.log(children);
     const [editInputs, setEditInputs] = useState(false);
     const [inputFirst, setInputFirst] = useState<number | null>(input_first);
@@ -27,11 +26,33 @@ const InputFormMy = ({ children, input_first, input_second, input_third, output,
     const [tempInputFirst, setTempInputFirst] = useState<number | null>(null);
     const [tempInputSecond, setTempInputSecond] = useState<number | null>(null);
     const [tempInputThird, setTempInputThird] = useState<number | null>(null);
-    const [shouldNotSend, setShouldNotSend] = useState(false)
+    const [shouldNotSend, setShouldNotSend] = useState(false);
+    const [shouldNotSendPrev, setShouldNotSendPrev] = useState(false);
+
+    useEffect(() => {
+        const tmp = (inputFirst === null || inputSecond === null || inputThird === null);
+        setShouldNotSend(tmp);
+        setShouldNotSendPrev(tmp);
+        if (tmp) {
+            set_upper_should_not_send(upper_should_not_send + 1);
+        }
+    }, []);
 
     useEffect(() => {
         setShouldNotSend(inputFirst === null || inputSecond === null || inputThird === null);
-    });
+    }, [inputFirst, inputSecond, inputThird]);
+
+    useEffect(() => {
+        if (!editInputs && (shouldNotSendPrev !== shouldNotSend)) {
+            if (shouldNotSend) {
+                set_upper_should_not_send(upper_should_not_send + 1);
+                setShouldNotSendPrev(true);
+            } else {
+                set_upper_should_not_send(upper_should_not_send - 1);
+                setShouldNotSendPrev(false);
+            }
+        }
+    }, [editInputs]);
 
     const useSetInput = (
         id: string,
@@ -53,7 +74,7 @@ const InputFormMy = ({ children, input_first, input_second, input_third, output,
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            .then(() => {})
+            .then(() => get_data())
             .catch((error) => {
                 console.error("Error fetching data:", error);
             });
@@ -113,10 +134,12 @@ const InputFormMy = ({ children, input_first, input_second, input_third, output,
                     ✏️
                 </Button>}
                 {editInputs && <Button
+                    disabled={shouldNotSend}
                     variant='success'
                     className='shadow-sm m-0'
                     onClick={useSetInput(data_type_id, inputFirst, inputSecond, inputThird)}>
-                    ✅
+                    {!shouldNotSend && <div className='p-0 m-0'>✅</div>}
+                    {shouldNotSend && <s>✅</s>}
                 </Button>}
                 {editInputs && <Button
                     variant='danger'
