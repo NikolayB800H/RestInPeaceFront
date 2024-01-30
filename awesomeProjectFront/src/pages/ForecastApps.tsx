@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Link } from 'react-router-dom';
 import { Navbar, Form, Button, Table, InputGroup, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
@@ -27,6 +27,17 @@ const ForecastApps = () => {
     const [loaded, setLoaded] = useState(false);
     const userFilter = useSelector((state: RootState) => state.search.user);
     const [selectedKey, setSelectedKey] = useState("любой");
+    const [offset, setOffset] = useState(0);
+    
+    const parentref = useRef<HTMLTableSectionElement>(null);
+    const handleScroll = () => {
+        if (parentref.current) parentref.current.scrollTop = offset;
+        //console.log('set to ', offset);
+    };
+    const getscroll = () => {
+        setOffset(parentref.current ? parentref.current.scrollTop : 0);
+        //console.log('retr ', parentref.current ? parentref.current.scrollTop : 0);
+    };
 
     const handleSelect = (eventKey: string | null) => {
         if (eventKey === null) return;
@@ -39,7 +50,9 @@ const ForecastApps = () => {
     };
 
     const useGetData = () => {
-        setLoaded(false)
+        setLoaded(false);
+        getscroll();
+        //handleScroll();
         getForecastApplications(userFilter, statusFilter, startDate, endDate)
             .then((data) => {
                 setLoaded(true);
@@ -55,6 +68,10 @@ const ForecastApps = () => {
         event.preventDefault();
         /*useGetData()*/
     }
+
+    useEffect(() => {
+        handleScroll();
+    }, [forecastApplications]);
 
     useEffect(() => {
         dispatch(clearHistory());
@@ -84,7 +101,7 @@ const ForecastApps = () => {
                         <Form.Control value={userFilter} onChange={(e) => dispatch(setUser(e.target.value))} />
                     </InputGroup>}
                     <InputGroup size='sm' className='shadow-sm rounded-1'>
-                        <InputGroup.Text>Статус заявки:</InputGroup.Text>
+                        <InputGroup.Text>Статус запроса:</InputGroup.Text>
                         <Delim />
                         <ButtonGroup size='sm' className='flex-grow-1 rounded-0'>
                         <DropdownButton
@@ -122,7 +139,7 @@ const ForecastApps = () => {
                         <tr>
                             {role == MODERATOR && <th className='text-center'>Создатель</th>}
                             <th className='text-center'>Статус</th>
-                            <th className='text-center'>Статус рассчёта</th>
+                            <th className='text-center'>Статус расчёта</th>
                             <th className='text-center'>{"Рассчитано " + ((forecastApplications) => {
                                     let calculated = 0;
                                     let total = 0;
@@ -137,10 +154,10 @@ const ForecastApps = () => {
                             <th className='text-center'>Дата формирования</th>
                             <th className='text-center'>Дата завершения</th>
                             <th className='text-center'>Дата начала измерений</th>
-                            <th className='text-center'></th>
+                            <th className='text-center' style={{width: "220px"}}></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody ref={parentref}>
                         {forecastApplications.map((application) => (
                             <tr key={application.application_id}>
                                 {role == MODERATOR && <td className='text-center'>{application.creator} </td>}
@@ -151,28 +168,20 @@ const ForecastApps = () => {
                                 <td className='text-center'>{application.application_formation_date}</td>
                                 <td className='text-center'>{application.application_completion_date}</td>
                                 <td className='text-center'>{application.input_start_date}</td>
-                                <td className='p-0 text-center align-middle'>
-                                    <Table className='m-0'>
-                                        <tbody>
-                                            <tr>
-                                                <td className='py-1 border-0' style={{ background: 'transparent' }}>
-                                                    <Link to={`${forecast_applications}/${application.application_id}`}
-                                                        className='shadow-sm btn btn-sm btn-outline-dark text-decoration-none w-100' >
-                                                        Подробнее
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                            {application.application_status == 'сформирован' && role == MODERATOR && <tr>
-                                                <td className='py-1 border-0' style={{ background: 'transparent' }}>
-                                                    <ButtonGroup className='shadow-sm flex-grow-1 w-100'>
-                                                        <Button variant='outline-success' size='sm' onClick={moderator_confirm(application.application_id, "завершён")}>Одобрить завершение</Button>
-                                                        <Delim />
-                                                        <Button variant='outline-danger' size='sm' onClick={moderator_confirm(application.application_id, "отклонён")}>Отклонить</Button>
-                                                    </ButtonGroup>
-                                                </td>
-                                            </tr>}
-                                        </tbody>
-                                    </Table>
+                                <td className='p-0 text-center align-middle' style={{width: "220px"}}>
+                                    <div className='py-3 border-0 px-2' style={{ background: 'transparent' }}>
+                                        <Link to={`${forecast_applications}/${application.application_id}`}
+                                            className='shadow-sm btn btn-sm btn-outline-dark text-decoration-none w-100' >
+                                            Подробнее
+                                        </Link>
+                                    </div>
+                                    {application.application_status == 'сформирован' && role == MODERATOR && <div className='pt-0 pb-3 border-0 px-2' style={{ background: 'transparent' }}>
+                                        <ButtonGroup className='shadow-sm flex-grow-1 w-100'>
+                                            <Button variant='outline-success' size='sm' onClick={moderator_confirm(application.application_id, "завершён")}>Одобрить завершение</Button>
+                                            <Delim />
+                                            <Button variant='outline-danger' size='sm' onClick={moderator_confirm(application.application_id, "отклонён")}>Отклонить</Button>
+                                        </ButtonGroup>
+                                    </div>}
                                 </td>
                             </tr>
                         ))}

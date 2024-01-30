@@ -93,7 +93,7 @@ const DataTypesTable = () => {
                                 <td className='text-center'>{`±${dataType.precision}`}</td>
                                 <td className='text-center'>{dataType.unit}</td>
                                 <td className='text-center'>{dataType.description}</td>
-                                <td className='text-center align-middle p-1 border-0'style={{ background: 'transparent' }}>
+                                <td className='text-center align-middle py-3 px-2 border-0'style={{ background: 'transparent' }}>
                                     <ButtonGroup className='shadow-sm flex-grow-1 w-100 rounded-1' vertical>
                                         <Button
                                             variant="outline-dark"

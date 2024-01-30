@@ -140,17 +140,17 @@ const ForecastAppInfo = () => {
                         <Card className='shadow-sm text center text-md-start'>
                             <Card.Body className='pt-1 pb-2'>
                                 <InputGroup className='mb-3 shadow-sm rounded-2'>
-                                    <InputGroup.Text className='w-25 t-input-group-text'>Статус заявки</InputGroup.Text>
+                                    <InputGroup.Text className='w-25 t-input-group-text'>Статус запроса</InputGroup.Text>
                                     <Delim />
                                     <Form.Control readOnly value={application.application_status} />
                                 </InputGroup>
                                 <InputGroup className='mb-3 shadow-sm rounded-2'>
-                                    <InputGroup.Text className='w-25 t-input-group-text'>Создана</InputGroup.Text>
+                                    <InputGroup.Text className='w-25 t-input-group-text'>Создан</InputGroup.Text>
                                     <Delim />
                                     <Form.Control readOnly value={application.application_creation_date} />
                                 </InputGroup>
                                 {application.application_status != 'черновик' && <InputGroup className='mb-3 shadow-sm rounded-2'>
-                                    <InputGroup.Text className='w-25 t-input-group-text'>Сформирована</InputGroup.Text>
+                                    <InputGroup.Text className='w-25 t-input-group-text'>Сформирован</InputGroup.Text>
                                     <Delim />
                                     <Form.Control readOnly value={application.application_formation_date ? application.application_formation_date : ''} />
                                 </InputGroup>}
@@ -183,7 +183,7 @@ const ForecastAppInfo = () => {
                                 <br></br>
                                 {application.application_status != 'черновик' &&
                                     <InputGroup className='mb-3 shadow-sm rounded-2'>
-                                        <InputGroup.Text className='w-25 t-input-group-text'>Статус рассчёта</InputGroup.Text>
+                                        <InputGroup.Text className='w-25 t-input-group-text'>Статус расчёта</InputGroup.Text>
                                         <Delim />
                                         <Form.Control readOnly value={application.calculate_status ? application.calculate_status : ''} />
                                     </InputGroup>
@@ -191,8 +191,8 @@ const ForecastAppInfo = () => {
                                 {application.application_status == 'черновик' &&
                                     <ButtonGroup className='w-50 shadow-sm'>
                                         <Button disabled={inputStartDate === null || edit || shouldNotSend != 0} className='w-50' variant='outline-success' onClick={confirm}>
-                                            {(inputStartDate !== null && !edit && shouldNotSend == 0) && <div className='p-0 m-0'>Сформировать и начать рассчёт</div>}
-                                            {(inputStartDate === null || edit || shouldNotSend != 0) && <s>Сформировать и начать рассчёт</s>}
+                                            {(inputStartDate !== null && !edit && shouldNotSend == 0) && <div className='p-0 m-0'>Сформировать и начать расчёт</div>}
+                                            {(inputStartDate === null || edit || shouldNotSend != 0) && <s>Сформировать и начать расчёт</s>}
                                         </Button>
                                         <Delim />
                                         <Button className='w-50' variant='outline-danger' onClick={deleteT}>Удалить</Button>
@@ -241,7 +241,7 @@ const ForecastAppInfo = () => {
                     </Col>
                 </>
             ) : (
-                <h4 className='text-center'>Такой заявки не существует</h4>
+                <h4 className='text-center'>Такого запроса не существует</h4>
             )}
         </LoadAnimation>
     )

@@ -36,7 +36,7 @@ function NavigationBar() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto flex-grow-1">
                         <Link to="/data_types" className="nav-link">Виды данных</Link>
-                        <Link to="/forecast_applications" className="nav-link">Заявки на прогнозы</Link>
+                        <Link to="/forecast_applications" className="nav-link">Запросы на прогнозы</Link>
                         {userRole === MODERATOR && <Link to="/data_types-edit" className="nav-link text-nowrap">Управление видами данных</Link>}
                         <Navbar.Collapse className="justify-content-end">
                             {userLogin ? (

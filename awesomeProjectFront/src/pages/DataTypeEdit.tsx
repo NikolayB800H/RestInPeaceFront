@@ -97,7 +97,7 @@ const DataTypeEdit: FC = () => {
                 .then((response) => getDataType(response.data).then((data) => setDataType(data)))
         } else {
             setShowImage(false);
-            console.log('save')
+            //console.log('save')
             axiosAPI.put(`/data_types/${dataType?.data_type_id}`, formData, { headers: { 'Authorization': `Bearer${accessToken}`, } })
                 .then(() => getDataType(data_type_id).then((data) => {setDataType(data); setShowImage(true);}))
         }
