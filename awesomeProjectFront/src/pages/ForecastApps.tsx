@@ -159,7 +159,7 @@ const ForecastApps = () => {
                     </thead>
                     <tbody ref={parentref}>
                         {forecastApplications.map((application) => (
-                            <tr key={application.application_id}>
+                            <tr key={application.application_id} style={application.calculated != application.total ? {backgroundColor: "rgba(0, 255, 34, 0.1)"} : {}}>
                                 {role == MODERATOR && <td className='text-center'>{application.creator} </td>}
                                 <td className='text-center'>{application.application_status}</td>
                                 <td className='text-center'>{application.calculate_status}</td>
